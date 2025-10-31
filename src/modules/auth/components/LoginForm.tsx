@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { FormError } from "@/components/ui/FormError";
 import { useState } from "react";
-import { AuthService } from "../../../services/auth.service";
+import { AuthService } from "../services/auth.service";
 
 export function LoginForm() {
     const router = useRouter();

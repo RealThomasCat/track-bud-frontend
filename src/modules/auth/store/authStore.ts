@@ -1,6 +1,6 @@
 "use client";
 import { create } from "zustand";
-import { AuthService } from "../../../services/auth.service";
+import { AuthService } from "../services/auth.service";
 
 // User type definition
 type User = {

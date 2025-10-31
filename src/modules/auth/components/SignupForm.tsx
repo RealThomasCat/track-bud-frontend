@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { useState } from "react";
 import { FormError } from "@/components/ui/FormError";
-import { AuthService } from "../../../services/auth.service";
+import { AuthService } from "../services/auth.service";
 
 export function SignupForm() {
     const router = useRouter();

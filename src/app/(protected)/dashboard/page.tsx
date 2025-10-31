@@ -1,7 +1,7 @@
 "use client";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useAuthStore } from "@/modules/auth/store/authStore";
+import { useAuthStore } from "@/modules/auth/store/auth.store";
 import { Button } from "@/components/ui/Button";
 
 export default function Dashboard() {

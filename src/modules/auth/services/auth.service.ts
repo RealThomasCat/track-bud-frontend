@@ -1,5 +1,5 @@
 import { api } from "@/lib/axios";
-import { LoginInput, SignupInput } from "@/modules/auth/schemas/authSchemas";
+import { LoginInput, SignupInput } from "@/modules/auth/schemas/auth.schemas";
 
 // This file exports typed functions that perform API calls for auth domain
 

@@ -1,8 +1,8 @@
 "use client";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { loginSchema, LoginInput } from "../schemas/authSchemas";
-import { useAuthStore } from "../store/authStore";
+import { loginSchema, LoginInput } from "../schemas/auth.schemas";
+import { useAuthStore } from "../store/auth.store";
 import { useRouter } from "next/navigation";
 import { extractErrorMessage } from "@/lib/utils";
 import { Input } from "@/components/ui/Input";

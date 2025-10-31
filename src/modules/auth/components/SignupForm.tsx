@@ -1,7 +1,7 @@
 "use client";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { signupSchema, SignupInput } from "../schemas/authSchemas";
+import { signupSchema, SignupInput } from "../schemas/auth.schemas";
 import { useRouter } from "next/navigation";
 import { extractErrorMessage } from "@/lib/utils";
 import { Input } from "@/components/ui/Input";

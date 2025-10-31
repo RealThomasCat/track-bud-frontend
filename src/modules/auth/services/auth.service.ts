@@ -1,17 +1,19 @@
 import { api } from "@/lib/axios";
-import { LoginInput, SignupInput } from "@/modules/auth/schemas/auth.schemas";
-
-// This file exports typed functions that perform API calls for auth domain
+import type {
+    LoginInput,
+    SignupInput,
+    AuthUser,
+} from "@/modules/auth/schemas/auth.schemas";
 
 export const AuthService = {
     async login(data: LoginInput) {
-        const res = await api.post("/auth/login", data);
+        const res = await api.post<{ user: AuthUser }>("/auth/login", data);
         return res.data.user;
     },
 
     async signup(data: SignupInput) {
-        const res = await api.post("/auth/signup", data);
-        return res.data;
+        const res = await api.post<{ user: AuthUser }>("/auth/signup", data);
+        return res.data.user;
     },
 
     async logout() {
@@ -19,7 +21,7 @@ export const AuthService = {
     },
 
     async me() {
-        const res = await api.get("/auth/me");
+        const res = await api.get<{ user: AuthUser }>("/auth/me");
         return res.data.user;
     },
 };

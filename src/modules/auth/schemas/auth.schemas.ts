@@ -1,6 +1,12 @@
 import { z } from "zod";
 
-// Keep identical to backend schemas for consistency
+export type AuthUser = {
+    id: number;
+    name: string;
+    email: string;
+    defaultCurrency: string;
+};
+
 export const signupSchema = z.object({
     name: z
         .string()

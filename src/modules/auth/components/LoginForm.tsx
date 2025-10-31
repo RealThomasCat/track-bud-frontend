@@ -3,13 +3,13 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, LoginInput } from "../schemas/authSchemas";
 import { useAuthStore } from "../store/authStore";
-import { api } from "@/lib/axios";
 import { useRouter } from "next/navigation";
 import { extractErrorMessage } from "@/lib/utils";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { FormError } from "@/components/ui/FormError";
 import { useState } from "react";
+import { AuthService } from "../../../services/auth.service";
 
 export function LoginForm() {
     const router = useRouter();
@@ -30,8 +30,8 @@ export function LoginForm() {
         setApiError(null);
 
         try {
-            const res = await api.post("/auth/login", data);
-            setUser(res.data.user);
+            const user = await AuthService.login(data);
+            setUser(user);
             router.push("/dashboard");
         } catch (err: unknown) {
             setApiError(extractErrorMessage(err));

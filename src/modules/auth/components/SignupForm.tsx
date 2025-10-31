@@ -2,13 +2,13 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signupSchema, SignupInput } from "../schemas/authSchemas";
-import { api } from "@/lib/axios";
 import { useRouter } from "next/navigation";
 import { extractErrorMessage } from "@/lib/utils";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { useState } from "react";
 import { FormError } from "@/components/ui/FormError";
+import { AuthService } from "../../../services/auth.service";
 
 export function SignupForm() {
     const router = useRouter();
@@ -28,7 +28,7 @@ export function SignupForm() {
         setApiError(null);
 
         try {
-            await api.post("/auth/signup", data);
+            await AuthService.signup(data);
             router.push("/login");
         } catch (err: unknown) {
             setApiError(extractErrorMessage(err));

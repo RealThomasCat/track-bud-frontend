@@ -1,6 +1,6 @@
 "use client";
 import { create } from "zustand";
-import { api } from "@/lib/axios";
+import { AuthService } from "../../../services/auth.service";
 
 // User type definition
 type User = {
@@ -33,8 +33,8 @@ export const useAuthStore = create<AuthState>((set) => ({
         set({ loading: true });
 
         try {
-            const res = await api.get("/auth/me");
-            set({ user: res.data.user });
+            const user = await AuthService.me();
+            set({ user });
         } catch {
             set({ user: null });
         } finally {
@@ -44,7 +44,7 @@ export const useAuthStore = create<AuthState>((set) => ({
 
     // Action to log out the user
     logout: async () => {
-        await api.post("/auth/logout");
+        await AuthService.logout();
         set({ user: null });
     },
 }));

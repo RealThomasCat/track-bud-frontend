@@ -5,30 +5,35 @@ import type {
     DashboardTopCategory,
     DashboardChart,
 } from "@/modules/dashboard/schemas/dashboard.schemas";
+import { ApiResponse } from "@/types/apiResponse";
 
 export const DashboardService = {
     async getSummary() {
-        const res = await api.get<DashboardSummary>("/dashboard/summary");
-        return res.data;
+        const res = await api.get<ApiResponse<{ summary: DashboardSummary }>>(
+            "/dashboard/summary"
+        );
+        return res.data.summary;
     },
 
     async getRecentActivity() {
-        const res = await api.get<DashboardTransaction[]>(
-            "/dashboard/recent-activity"
-        );
-        return res.data;
+        const res = await api.get<
+            ApiResponse<{ recentActivity: DashboardTransaction[] }>
+        >("/dashboard/recent-activity");
+        return res.data.recentActivity;
     },
 
     async getTopCategories() {
-        const res = await api.get<DashboardTopCategory[]>(
-            "/dashboard/top-categories"
-        );
-        return res.data;
+        const res = await api.get<
+            ApiResponse<{ topCategories: DashboardTopCategory[] }>
+        >("/dashboard/top-categories");
+        return res.data.topCategories;
     },
 
     async getCharts() {
-        const res = await api.get<DashboardChart>("/dashboard/charts");
-        return res.data;
+        const res = await api.get<ApiResponse<{ charts: DashboardChart }>>(
+            "/dashboard/charts"
+        );
+        return res.data.charts;
     },
 
     async getAll() {

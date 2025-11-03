@@ -21,6 +21,6 @@ export type DashboardTopCategory = {
 };
 
 export type DashboardChart = {
-    monthlyIncome: number[];
-    monthlyExpense: number[];
+    byCategory: { category: string; total: number }[];
+    byMonth: { month: string; income: number; expense: number }[];
 };

@@ -1,20 +1,13 @@
 "use client";
 import { create } from "zustand";
 import { AuthService } from "../services/auth.service";
-
-// User type definition
-type User = {
-    id: number;
-    name: string;
-    email: string;
-    defaultCurrency: string;
-};
+import { AuthUser } from "../schemas/auth.schemas";
 
 // Auth state type definition (state + actions)
 type AuthState = {
-    user: User | null;
+    user: AuthUser | null;
     loading: boolean;
-    setUser: (user: User | null) => void;
+    setUser: (user: AuthUser | null) => void;
     fetchMe: () => Promise<void>;
     logout: () => Promise<void>;
 };
@@ -25,13 +18,12 @@ export const useAuthStore = create<AuthState>((set) => ({
     user: null,
     loading: false,
 
-    // Action to set the user
-    setUser: (user) => set({ user }),
+    // Action to set user
+    setUser: (user) => set(() => ({ user })),
 
-    // Action to fetch the current authenticated user
+    // Action to fetch current user
     fetchMe: async () => {
         set({ loading: true });
-
         try {
             const user = await AuthService.me();
             set({ user });
@@ -42,9 +34,14 @@ export const useAuthStore = create<AuthState>((set) => ({
         }
     },
 
-    // Action to log out the user
+    // Action to logout user
     logout: async () => {
-        await AuthService.logout();
-        set({ user: null });
+        set({ loading: true });
+        try {
+            await AuthService.logout();
+            set({ user: null });
+        } finally {
+            set({ loading: false });
+        }
     },
 }));

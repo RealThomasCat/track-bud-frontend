@@ -66,7 +66,12 @@ export function SignupForm() {
                 error={errors.password}
             />
 
-            <Button type="submit" variant="primary" loading={isSubmitting}>
+            <Button
+                type="submit"
+                variant="primary"
+                loading={isSubmitting}
+                disabled={isSubmitting}
+            >
                 Register
             </Button>
 

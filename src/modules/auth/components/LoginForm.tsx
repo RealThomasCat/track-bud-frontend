@@ -32,7 +32,7 @@ export function LoginForm() {
         try {
             const user = await AuthService.login(data);
             setUser(user);
-            router.push("/dashboard");
+            router.replace("/dashboard");
         } catch (err: unknown) {
             setApiError(extractErrorMessage(err));
         }
@@ -60,7 +60,12 @@ export function LoginForm() {
                 error={errors.password}
             />
 
-            <Button type="submit" variant="primary" loading={isSubmitting}>
+            <Button
+                type="submit"
+                variant="primary"
+                loading={isSubmitting}
+                disabled={isSubmitting}
+            >
                 Login
             </Button>
 

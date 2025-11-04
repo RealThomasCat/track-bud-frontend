@@ -3,12 +3,18 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/modules/auth/store/auth.store";
 import { Button } from "@/components/ui/Button";
+import { SummaryCards } from "@/modules/dashboard/components/SummaryCards";
+import { ChartsSection } from "@/modules/dashboard/components/ChartsSection";
+import { TopCategories } from "@/modules/dashboard/components/TopCategories";
+import { RecentActivity } from "@/modules/dashboard/components/RecentActivity";
+import { useDashboardStore } from "@/modules/dashboard/store/dashboard.store";
 
 export default function Dashboard() {
     const router = useRouter();
 
     // Access auth store values + actions
-    const { user, loading, fetchMe, logout } = useAuthStore();
+    const { user, loading: authLoading, fetchMe, logout } = useAuthStore();
+    const { fetchAll, loading: dashboardLoading } = useDashboardStore();
 
     // First useEffect:
     // Runs once when component mounts.
@@ -25,36 +31,54 @@ export default function Dashboard() {
     // Purpose: If fetchMe has finished (`loading=false`) but still no user,
     // it means the session is invalid → redirect to /login.
     useEffect(() => {
-        if (!loading && !user) {
+        if (!authLoading && !user) {
             router.push("/login");
         }
-    }, [loading, user, router]);
+    }, [authLoading, user, router]);
 
-    // Show loading state while fetching user data
-    if (loading || !user) {
+    // Third useEffect:
+    // Runs whenever `user` changes.
+    // Purpose: Once we have valid user data, fetch the dashboard data.
+    useEffect(() => {
+        if (user) {
+            fetchAll();
+        }
+    }, [user, fetchAll]);
+
+    // Show loading state while auth or dashboard data is being fetched
+    if (authLoading || dashboardLoading || !user) {
         return (
-            <div className="flex justify-center items-center h-screen">
-                <p>Loading...</p>
+            <div className="flex justify-center items-center h-screen text-neutral-400">
+                Loading dashboard...
             </div>
         );
     }
 
     // Dashboard UI
     return (
-        <div className="p-10">
-            <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
-            <p>Welcome, {user.name}!</p>
+        <div className="min-h-screen p-8 bg-neutral-950 text-neutral-200">
+            <div className="flex justify-between items-center mb-8">
+                <div>
+                    <h1 className="text-3xl font-bold text-white">Dashboard</h1>
+                    <p className="text-neutral-500">Welcome, {user.name}</p>
+                </div>
 
-            <Button
-                variant="primary"
-                className="max-w-24"
-                onClick={async () => {
-                    await logout();
-                    router.push("/login");
-                }}
-            >
-                Logout
-            </Button>
+                <Button
+                    className="max-w-40"
+                    variant="primary"
+                    onClick={async () => {
+                        await logout();
+                        router.push("/login");
+                    }}
+                >
+                    Logout
+                </Button>
+            </div>
+
+            <SummaryCards />
+            <ChartsSection />
+            <TopCategories />
+            <RecentActivity />
         </div>
     );
 }

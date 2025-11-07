@@ -8,6 +8,7 @@ import { ChartsSection } from "@/modules/dashboard/components/ChartsSection";
 import { TopCategories } from "@/modules/dashboard/components/TopCategories";
 import { RecentActivity } from "@/modules/dashboard/components/RecentActivity";
 import { useDashboardStore } from "@/modules/dashboard/store/dashboard.store";
+import { Categories } from "@/modules/categories/components/Categories";
 
 export default function Dashboard() {
     const router = useRouter();
@@ -79,6 +80,7 @@ export default function Dashboard() {
             <ChartsSection />
             <TopCategories />
             <RecentActivity />
+            <Categories />
         </div>
     );
 }

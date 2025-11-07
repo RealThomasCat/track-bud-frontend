@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+// Type representing an authenticated user
 export type AuthUser = {
     id: number;
     name: string;
@@ -7,6 +8,7 @@ export type AuthUser = {
     defaultCurrency: string;
 };
 
+// Schema for user signup
 export const signupSchema = z.object({
     name: z
         .string()
@@ -19,6 +21,7 @@ export const signupSchema = z.object({
         .min(6, { message: "Password must be at least 6 characters long" }),
 });
 
+// Schema for user login
 export const loginSchema = z.object({
     email: z
         .email({ message: "Invalid email address" })

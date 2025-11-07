@@ -8,6 +8,7 @@ import type {
 import { ApiResponse } from "@/types/apiResponse";
 
 export const DashboardService = {
+    // DASHBOARD SUMMARY
     async getSummary() {
         const res = await api.get<ApiResponse<{ summary: DashboardSummary }>>(
             "/dashboard/summary"
@@ -15,6 +16,7 @@ export const DashboardService = {
         return res.data.summary;
     },
 
+    // RECENT ACTIVITY
     async getRecentActivity() {
         const res = await api.get<
             ApiResponse<{ recentActivity: DashboardTransaction[] }>
@@ -22,6 +24,7 @@ export const DashboardService = {
         return res.data.recentActivity;
     },
 
+    // TOP CATEGORIES
     async getTopCategories() {
         const res = await api.get<
             ApiResponse<{ topCategories: DashboardTopCategory[] }>
@@ -29,6 +32,7 @@ export const DashboardService = {
         return res.data.topCategories;
     },
 
+    // DASHBOARD CHARTS
     async getCharts() {
         const res = await api.get<ApiResponse<{ charts: DashboardChart }>>(
             "/dashboard/charts"
@@ -36,6 +40,7 @@ export const DashboardService = {
         return res.data.charts;
     },
 
+    // GET ALL DASHBOARD DATA
     async getAll() {
         const [summary, recentActivity, topCategories, charts] =
             await Promise.all([

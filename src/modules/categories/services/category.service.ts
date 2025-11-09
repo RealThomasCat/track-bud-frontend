@@ -7,7 +7,7 @@ import {
 } from "../schemas/category.schemas";
 
 export const CategoryService = {
-    // GET CATEGORIES
+    // Fetch all categories
     async getAll(): Promise<Category[]> {
         const res = await api.get<ApiResponse<{ categories: Category[] }>>(
             "/categories"
@@ -15,7 +15,7 @@ export const CategoryService = {
         return res.data.categories;
     },
 
-    // CREATE CATEGORY
+    // Create a new category
     async create(data: CreateCategoryInput): Promise<Category> {
         const res = await api.post<ApiResponse<{ category: Category }>>(
             "/categories",
@@ -24,7 +24,7 @@ export const CategoryService = {
         return res.data.category;
     },
 
-    // DELETE CATEGORY
+    // Delete a category by ID
     async delete(data: DeleteCategoryInput): Promise<Category> {
         const res = await api.delete<ApiResponse<{ category: Category }>>(
             `/categories/${data.id}`

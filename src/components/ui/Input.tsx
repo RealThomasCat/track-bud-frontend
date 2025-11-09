@@ -14,11 +14,11 @@ type InputProps = InputHTMLAttributes<HTMLInputElement> & {
 
 export function Input({ label, error, className, ...props }: InputProps) {
     return (
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col gap-2">
             {label && (
                 <label
                     htmlFor={props.id}
-                    className="text-sm font-medium text-gray-700"
+                    className="text-sm font-medium text-neutral-300 mb-1"
                 >
                     {label}
                 </label>

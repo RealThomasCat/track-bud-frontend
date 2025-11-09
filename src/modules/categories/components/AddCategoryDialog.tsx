@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -8,31 +9,48 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog";
-import { useCategoryStore } from "../store/category.store";
 import {
+    Category,
     CreateCategoryInput,
     createCategorySchema,
 } from "../schemas/category.schemas";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
+import { extractErrorMessage } from "@/lib/utils";
+import { CategoryService } from "../services/category.service";
+import { FormError } from "@/components/ui/FormError";
 
 type Props = {
     open: boolean;
     onClose: () => void;
+    onCategoryCreated: (category: Category) => void;
 };
 
-export function AddCategoryDialog({ open, onClose }: Props) {
-    const { createCategory, loading } = useCategoryStore();
+export function AddCategoryDialog({ open, onClose, onCategoryCreated }: Props) {
+    const [apiError, setApiError] = useState<string | null>(null);
 
-    const form = useForm<CreateCategoryInput>({
+    // Initialize form with Zod validation (same as LoginForm)
+    const {
+        register,
+        handleSubmit,
+        formState: { errors, isSubmitting },
+        reset,
+    } = useForm<CreateCategoryInput>({
         resolver: zodResolver(createCategorySchema),
         defaultValues: { name: "" },
     });
 
+    // Submit handler
     const onSubmit = async (data: CreateCategoryInput) => {
-        await createCategory(data);
-        onClose();
-        form.reset();
+        setApiError(null);
+        try {
+            const newCategory = await CategoryService.create(data);
+            onCategoryCreated(newCategory);
+            reset();
+            onClose();
+        } catch (err: unknown) {
+            setApiError(extractErrorMessage(err));
+        }
     };
 
     return (
@@ -45,35 +63,31 @@ export function AddCategoryDialog({ open, onClose }: Props) {
                 </DialogHeader>
 
                 <form
-                    onSubmit={form.handleSubmit(onSubmit)}
-                    className="space-y-5 mt-2"
+                    onSubmit={handleSubmit(onSubmit)}
+                    className="flex flex-col gap-4 mt-2"
+                    noValidate
                 >
-                    {/* Input Field */}
-                    <div>
-                        <label className="text-sm font-medium text-neutral-300">
-                            Category Name
-                        </label>
-                        <Input
-                            {...form.register("name")}
-                            placeholder="e.g. Groceries"
-                            disabled={loading}
-                            className="mt-2 bg-neutral-800 border-neutral-700 text-neutral-100 placeholder:text-neutral-500"
-                        />
-                        {form.formState.errors.name && (
-                            <p className="text-sm text-rose-500 mt-1">
-                                {form.formState.errors.name.message}
-                            </p>
-                        )}
-                    </div>
+                    {/* Category Name */}
+                    <Input
+                        label="Category Name"
+                        placeholder="e.g. Groceries"
+                        disabled={isSubmitting}
+                        {...register("name")}
+                        error={errors.name}
+                    />
 
-                    {/* Submit Button */}
+                    {/* API Error */}
+                    <FormError message={apiError ?? undefined} />
+
                     <div className="flex justify-end">
                         <Button
                             type="submit"
-                            disabled={loading}
-                            className="bg-emerald-600 hover:bg-emerald-500 text-white"
+                            variant="primary"
+                            disabled={isSubmitting}
+                            loading={isSubmitting}
+                            className="min-w-28"
                         >
-                            {loading ? "Adding..." : "Add Category"}
+                            Add Category
                         </Button>
                     </div>
                 </form>

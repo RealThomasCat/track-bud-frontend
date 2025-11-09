@@ -7,21 +7,43 @@ import {
     DialogTitle,
     DialogFooter,
 } from "@/components/ui/dialog";
-import { useCategoryStore } from "../store/category.store";
+import { useState } from "react";
 import { Button } from "@/components/ui/Button";
+import { extractErrorMessage } from "@/lib/utils";
+import { CategoryService } from "../services/category.service";
+import { FormError } from "@/components/ui/FormError";
 
 type Props = {
     categoryId: number;
     open: boolean;
     onClose: () => void;
+    onCategoryDeleted: (id: number) => void;
 };
 
-export function DeleteCategoryDialog({ categoryId, open, onClose }: Props) {
-    const { deleteCategory, loading } = useCategoryStore();
+export function DeleteCategoryDialog({
+    categoryId,
+    open,
+    onClose,
+    onCategoryDeleted,
+}: Props) {
+    const [deleting, setDeleting] = useState(false);
+    const [apiError, setError] = useState<string | null>(null);
 
+    // Handle delete action: Calls API, notifies parent and closes dialog on success, shows error on failure
     const handleDelete = async () => {
-        await deleteCategory({ id: categoryId });
-        onClose();
+        setError(null);
+        setDeleting(true);
+        try {
+            const deleted = await CategoryService.delete({ id: categoryId });
+
+            // Notify parent + close
+            onCategoryDeleted(deleted.id);
+            onClose();
+        } catch (err: unknown) {
+            setError(extractErrorMessage(err));
+        } finally {
+            setDeleting(false);
+        }
     };
 
     return (
@@ -40,20 +62,25 @@ export function DeleteCategoryDialog({ categoryId, open, onClose }: Props) {
                     </span>
                 </p>
 
+                {/* API Error */}
+                <FormError message={apiError ?? undefined} />
+
                 <DialogFooter className="flex justify-end gap-3 mt-5">
                     <Button
                         variant="secondary"
                         onClick={onClose}
+                        disabled={deleting}
                         className="border-neutral-700 text-neutral-300 hover:bg-neutral-800 hover:text-neutral-100"
                     >
                         Cancel
                     </Button>
                     <Button
                         onClick={handleDelete}
-                        disabled={loading}
-                        className="bg-rose-600 hover:bg-rose-500 text-white"
+                        disabled={deleting}
+                        variant="danger"
+                        className="min-w-28"
                     >
-                        {loading ? "Deleting..." : "Delete"}
+                        {deleting ? "Deleting..." : "Delete"}
                     </Button>
                 </DialogFooter>
             </DialogContent>

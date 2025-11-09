@@ -7,6 +7,7 @@ import type {
     DashboardTopCategory,
     DashboardChart,
 } from "../schemas/dashboard.schemas";
+import { extractErrorMessage } from "@/lib/utils";
 
 type DashboardState = {
     summary: DashboardSummary | null;
@@ -38,11 +39,7 @@ export const useDashboardStore = create<DashboardState>((set) => ({
                 charts: data.charts,
             });
         } catch (err: unknown) {
-            const message =
-                err instanceof Error
-                    ? err.message
-                    : "Failed to fetch dashboard data";
-            set({ error: message });
+            set({ error: extractErrorMessage(err) });
         } finally {
             set({ loading: false });
         }

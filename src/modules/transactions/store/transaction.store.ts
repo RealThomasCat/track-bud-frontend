@@ -7,6 +7,7 @@ import {
     Transaction,
 } from "../schemas/transaction.schemas";
 import { TransactionService } from "../services/transaction.service";
+import { extractErrorMessage } from "@/lib/utils";
 
 // Type definition for Transaction Store
 type TransactionState = {
@@ -34,11 +35,7 @@ export const useTransactionStore = create<TransactionState>((set) => ({
             const transactions = await TransactionService.getAll();
             set({ transactions });
         } catch (err: unknown) {
-            const message =
-                err instanceof Error
-                    ? err.message
-                    : "Failed to fetch transactions";
-            set({ error: message });
+            set({ error: extractErrorMessage(err) });
         } finally {
             set({ loading: false });
         }
@@ -51,11 +48,7 @@ export const useTransactionStore = create<TransactionState>((set) => ({
             const transaction = await TransactionService.getById(id);
             return transaction;
         } catch (err: unknown) {
-            const message =
-                err instanceof Error
-                    ? err.message
-                    : "Failed to fetch transaction";
-            set({ error: message });
+            set({ error: extractErrorMessage(err) });
             return null;
         } finally {
             set({ loading: false });
@@ -72,11 +65,7 @@ export const useTransactionStore = create<TransactionState>((set) => ({
                 transactions: [newTransaction, ...state.transactions],
             }));
         } catch (err: unknown) {
-            const message =
-                err instanceof Error
-                    ? err.message
-                    : "Failed to create transaction";
-            set({ error: message });
+            set({ error: extractErrorMessage(err) });
         } finally {
             set({ loading: false });
         }
@@ -93,11 +82,7 @@ export const useTransactionStore = create<TransactionState>((set) => ({
                 ),
             }));
         } catch (err: unknown) {
-            const message =
-                err instanceof Error
-                    ? err.message
-                    : "Failed to delete transaction";
-            set({ error: message });
+            set({ error: extractErrorMessage(err) });
         } finally {
             set({ loading: false });
         }

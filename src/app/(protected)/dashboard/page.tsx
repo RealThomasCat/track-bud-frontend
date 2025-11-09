@@ -9,6 +9,7 @@ import { TopCategories } from "@/modules/dashboard/components/TopCategories";
 import { RecentActivity } from "@/modules/dashboard/components/RecentActivity";
 import { useDashboardStore } from "@/modules/dashboard/store/dashboard.store";
 import { Categories } from "@/modules/categories/components/Categories";
+import { Transactions } from "@/modules/transactions/components/Transactions";
 
 export default function Dashboard() {
     const router = useRouter();
@@ -77,6 +78,7 @@ export default function Dashboard() {
             </div>
 
             <SummaryCards />
+            <Transactions />
             <ChartsSection />
             <TopCategories />
             <RecentActivity />

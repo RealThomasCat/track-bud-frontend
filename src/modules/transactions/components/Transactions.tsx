@@ -1,30 +1,63 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useTransactionStore } from "../store/transaction.store";
 import { AddTransactionDialog } from "./AddTransactionDialog";
 import { DeleteTransactionDialog } from "./DeleteTransactionDialog";
 import { Button } from "@/components/ui/Button";
 import { Trash2 } from "lucide-react";
 import { useCategoryStore } from "@/modules/categories/store/category.store";
+import { useTransactionStore } from "../store/transaction.store";
+import { CategoryService } from "@/modules/categories/services/category.service";
+import { TransactionService } from "../services/transaction.service";
+import { extractErrorMessage } from "@/lib/utils";
 
 export function Transactions() {
-    const { transactions, fetchTransactions, loading } = useTransactionStore();
-    const { categories, fetchCategories } = useCategoryStore();
+    const { categories, setCategories } = useCategoryStore();
+    const { transactions, setTransactions, addTransaction, removeTransaction } =
+        useTransactionStore();
+
     const [showAddDialog, setShowAddDialog] = useState(false);
     const [deleteId, setDeleteId] = useState<number | null>(null);
 
-    // Fetch transactions and categories on mount
+    // Local UI state
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+
+    // Fetch transactions + categories on mount
     useEffect(() => {
-        fetchTransactions();
-        if (!categories.length) {
-            fetchCategories();
-        }
-    }, [fetchTransactions, fetchCategories, categories.length]);
+        const loadData = async () => {
+            setLoading(true);
+            setError(null);
+            try {
+                // Fetch transactions
+                const txns = await TransactionService.getAll();
+                setTransactions(txns);
+
+                // Fetch categories only if not cached
+                if (!categories.length) {
+                    const cats = await CategoryService.getAll();
+                    setCategories(cats);
+                }
+            } catch (err: unknown) {
+                setError(extractErrorMessage(err));
+            } finally {
+                setLoading(false);
+            }
+        };
+        loadData();
+    }, [setTransactions, setCategories, categories.length]);
 
     if (loading) {
         return (
             <p className="text-sm text-neutral-400">Loading transactions...</p>
+        );
+    }
+
+    if (error) {
+        return (
+            <p className="text-sm text-rose-500">
+                Failed to load transactions: {error}
+            </p>
         );
     }
 
@@ -90,7 +123,6 @@ export function Transactions() {
                                                 : "text-rose-400 font-semibold"
                                         }
                                     >
-                                        {/* TODO: Implement user's currency symbol in future */}
                                         {txn.kind === "income" ? "+" : "-"}$
                                         {formattedAmount}
                                     </span>
@@ -122,6 +154,7 @@ export function Transactions() {
                 <AddTransactionDialog
                     open={showAddDialog}
                     onClose={() => setShowAddDialog(false)}
+                    onTransactionCreated={addTransaction}
                 />
             )}
 
@@ -131,6 +164,7 @@ export function Transactions() {
                     transactionId={deleteId}
                     open={!!deleteId}
                     onClose={() => setDeleteId(null)}
+                    onTransactionDeleted={removeTransaction}
                 />
             )}
         </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/Button";
+import { useState } from "react";
 import {
     Dialog,
     DialogContent,
@@ -8,24 +8,39 @@ import {
     DialogTitle,
     DialogFooter,
 } from "@/components/ui/dialog";
-import { useTransactionStore } from "../store/transaction.store";
+import { Button } from "@/components/ui/Button";
+import { extractErrorMessage } from "@/lib/utils";
+import { FormError } from "@/components/ui/FormError";
+import { TransactionService } from "../services/transaction.service";
 
 type Props = {
     transactionId: number;
     open: boolean;
     onClose: () => void;
+    onTransactionDeleted: (id: number) => void;
 };
 
 export function DeleteTransactionDialog({
     transactionId,
     open,
     onClose,
+    onTransactionDeleted,
 }: Props) {
-    const { deleteTransaction, loading } = useTransactionStore();
+    const [apiError, setApiError] = useState<string | null>(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleDelete = async () => {
-        await deleteTransaction({ id: transactionId });
-        onClose();
+        setApiError(null);
+        setIsSubmitting(true);
+        try {
+            await TransactionService.delete({ id: transactionId });
+            onTransactionDeleted(transactionId);
+            onClose();
+        } catch (err: unknown) {
+            setApiError(extractErrorMessage(err));
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -44,20 +59,26 @@ export function DeleteTransactionDialog({
                     </span>
                 </p>
 
+                {/* API Error */}
+                <FormError message={apiError ?? undefined} />
+
                 <DialogFooter className="flex justify-end gap-3 mt-5">
                     <Button
                         variant="secondary"
                         onClick={onClose}
+                        disabled={isSubmitting}
                         className="border-neutral-700 text-neutral-300 hover:bg-neutral-800 hover:text-neutral-100"
                     >
                         Cancel
                     </Button>
                     <Button
                         onClick={handleDelete}
-                        disabled={loading}
-                        className="bg-rose-600 hover:bg-rose-500 text-white"
+                        variant="danger"
+                        disabled={isSubmitting}
+                        loading={isSubmitting}
+                        className="min-w-28"
                     >
-                        {loading ? "Deleting..." : "Delete"}
+                        Delete
                     </Button>
                 </DialogFooter>
             </DialogContent>

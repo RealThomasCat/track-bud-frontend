@@ -15,7 +15,7 @@ export function TopCategories() {
                 {topCategories.map((c) => (
                     <li
                         key={c.category}
-                        className="flex justify-between text-neutral-300 text-sm border-b border-neutral-800 pb-1"
+                        className="flex justify-between text-neutral-300 text-sm border-b border-neutral-800 pb-3 pt-0.5"
                     >
                         <span>{c.category}</span>
                         <span className="text-neutral-400">₹{c.total}</span>

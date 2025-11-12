@@ -15,11 +15,11 @@ export function RecentActivity() {
                 {recentActivity.map((txn) => (
                     <li
                         key={txn.id}
-                        className="flex justify-between py-2 text-sm text-neutral-300"
+                        className="flex justify-between py-3 text-sm text-neutral-300"
                     >
                         <div>
                             <p className="font-medium">{txn.category}</p>
-                            <p className="text-neutral-500 text-xs">
+                            <p className="text-neutral-500 text-xs mt-0.5">
                                 {txn.note || "—"}
                             </p>
                         </div>
@@ -31,9 +31,10 @@ export function RecentActivity() {
                                         : "text-rose-400 font-semibold"
                                 }
                             >
-                                {txn.kind === "income" ? "+" : "-"}₹{txn.amount}
+                                {/* TODO: Apply user currency symbol */}
+                                {txn.kind === "income" ? "+" : "-"}${txn.amount}
                             </p>
-                            <p className="text-neutral-500 text-xs">
+                            <p className="text-neutral-500 text-xs mt-0.5">
                                 {new Date(txn.occurredAt).toLocaleDateString()}
                             </p>
                         </div>

@@ -7,6 +7,7 @@ export function SummaryCards() {
     if (!summary) return null;
 
     const cards = [
+        { label: "Balance", value: summary.balance, color: "text-blue-400" },
         {
             label: "Total Income",
             value: summary.totalIncome,
@@ -17,7 +18,6 @@ export function SummaryCards() {
             value: summary.totalExpense,
             color: "text-rose-400",
         },
-        { label: "Balance", value: summary.balance, color: "text-blue-400" },
     ];
 
     return (

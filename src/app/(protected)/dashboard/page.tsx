@@ -80,8 +80,8 @@ export default function Dashboard() {
             <SummaryCards />
             <Transactions />
             <ChartsSection />
-            <TopCategories />
             <RecentActivity />
+            <TopCategories />
             <Categories />
         </div>
     );

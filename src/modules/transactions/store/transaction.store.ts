@@ -2,6 +2,7 @@
 
 import { create } from "zustand";
 import { Transaction } from "../schemas/transaction.schemas";
+import { useDashboardStore } from "@/modules/dashboard/store/dashboard.store";
 
 type TransactionState = {
     transactions: Transaction[];
@@ -18,14 +19,24 @@ export const useTransactionStore = create<TransactionState>((set) => ({
     setTransactions: (transactions) => set({ transactions }),
 
     // Action to add transaction
-    addTransaction: (transaction) =>
+    addTransaction: async (transaction) => {
         set((state) => ({
             transactions: [transaction, ...state.transactions],
-        })),
+        }));
+
+        // Trigger dashboard refresh after addition
+        const { fetchAll } = useDashboardStore.getState();
+        await fetchAll();
+    },
 
     // Action to remove transaction by ID
-    removeTransaction: (id) =>
+    removeTransaction: async (id) => {
         set((state) => ({
             transactions: state.transactions.filter((t) => t.id !== id),
-        })),
+        }));
+
+        // Trigger dashboard refresh after deletion
+        const { fetchAll } = useDashboardStore.getState();
+        await fetchAll();
+    },
 }));

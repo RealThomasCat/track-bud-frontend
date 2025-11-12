@@ -1,90 +1,31 @@
 "use client";
 
 import { create } from "zustand";
-import {
-    CreateTransactionInput,
-    DeleteTransactionInput,
-    Transaction,
-} from "../schemas/transaction.schemas";
-import { TransactionService } from "../services/transaction.service";
-import { extractErrorMessage } from "@/lib/utils";
+import { Transaction } from "../schemas/transaction.schemas";
 
-// Type definition for Transaction Store
 type TransactionState = {
     transactions: Transaction[];
-    loading: boolean;
-    error: string | null;
-
-    fetchTransactions: () => Promise<void>;
-    fetchTransactionById: (id: number) => Promise<Transaction | null>;
-    createTransaction: (data: CreateTransactionInput) => Promise<void>;
-    deleteTransaction: (data: DeleteTransactionInput) => Promise<void>;
+    setTransactions: (transactions: Transaction[]) => void;
+    addTransaction: (transaction: Transaction) => void;
+    removeTransaction: (id: number) => void;
 };
 
-// Zustand Store for Transaction Management
 export const useTransactionStore = create<TransactionState>((set) => ({
-    // Initial state
+    // Initial State
     transactions: [],
-    loading: false,
-    error: null,
 
-    // Fetch all transactions for the logged-in user
-    fetchTransactions: async () => {
-        set({ loading: true, error: null });
-        try {
-            const transactions = await TransactionService.getAll();
-            set({ transactions });
-        } catch (err: unknown) {
-            set({ error: extractErrorMessage(err) });
-        } finally {
-            set({ loading: false });
-        }
-    },
+    // Action to set transactions
+    setTransactions: (transactions) => set({ transactions }),
 
-    // Fetch a single transaction by ID (used for detail view)
-    fetchTransactionById: async (id) => {
-        set({ loading: true, error: null });
-        try {
-            const transaction = await TransactionService.getById(id);
-            return transaction;
-        } catch (err: unknown) {
-            set({ error: extractErrorMessage(err) });
-            return null;
-        } finally {
-            set({ loading: false });
-        }
-    },
+    // Action to add transaction
+    addTransaction: (transaction) =>
+        set((state) => ({
+            transactions: [transaction, ...state.transactions],
+        })),
 
-    // Create a new transaction and add it to local state
-    createTransaction: async (data) => {
-        set({ loading: true, error: null });
-        try {
-            const newTransaction = await TransactionService.create(data);
-            // Add newly created transaction at top of list
-            set((state) => ({
-                transactions: [newTransaction, ...state.transactions],
-            }));
-        } catch (err: unknown) {
-            set({ error: extractErrorMessage(err) });
-        } finally {
-            set({ loading: false });
-        }
-    },
-
-    // Delete a transaction and remove it from local state
-    deleteTransaction: async (data) => {
-        set({ loading: true, error: null });
-        try {
-            await TransactionService.delete(data);
-            set((state) => ({
-                transactions: state.transactions.filter(
-                    (t) => t.id !== data.id
-                ),
-            }));
-        } catch (err: unknown) {
-            set({ error: extractErrorMessage(err) });
-        } finally {
-            set({ loading: false });
-        }
-    },
+    // Action to remove transaction by ID
+    removeTransaction: (id) =>
+        set((state) => ({
+            transactions: state.transactions.filter((t) => t.id !== id),
+        })),
 }));

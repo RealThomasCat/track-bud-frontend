@@ -9,7 +9,6 @@ import { TopCategories } from "@/modules/dashboard/components/TopCategories";
 import { RecentActivity } from "@/modules/dashboard/components/RecentActivity";
 import { useDashboardStore } from "@/modules/dashboard/store/dashboard.store";
 import { Categories } from "@/modules/categories/components/Categories";
-import { Transactions } from "@/modules/transactions/components/Transactions";
 
 export default function Dashboard() {
     const router = useRouter();
@@ -67,7 +66,7 @@ export default function Dashboard() {
 
                 <Button
                     className="max-w-40"
-                    variant="primary"
+                    variant="danger"
                     onClick={async () => {
                         await logout();
                         router.push("/login");
@@ -78,9 +77,8 @@ export default function Dashboard() {
             </div>
 
             <SummaryCards />
-            <Transactions />
-            <ChartsSection />
             <RecentActivity />
+            <ChartsSection />
             <TopCategories />
             <Categories />
         </div>

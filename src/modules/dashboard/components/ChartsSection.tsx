@@ -21,7 +21,7 @@ export function ChartsSection() {
     const { byCategory, byMonth } = useMemo(() => {
         if (!charts) return { byCategory: [], byMonth: [] };
 
-        // --- 1️⃣ Transform category data ---
+        // --- Transform category data ---
         // Sort categories descending by value, take top 4, sum the rest as "Other"
         const sorted = [...charts.byCategory].sort(
             (a, b) => Number(b.total) - Number(a.total)
@@ -66,8 +66,20 @@ export function ChartsSection() {
                 </h2>
                 <ResponsiveContainer width="100%" height="95%">
                     <BarChart data={byMonth}>
-                        <XAxis dataKey="month" stroke="#888" />
-                        <YAxis stroke="#888" />
+                        <XAxis
+                            dataKey="month"
+                            stroke="#888"
+                            style={{ fontSize: "0.85rem" }}
+                        />
+                        <YAxis
+                            stroke="#888"
+                            tickFormatter={(value) =>
+                                `$${value.toLocaleString()}`
+                            }
+                            style={{
+                                fontSize: "0.85rem",
+                            }}
+                        />
                         <Bar
                             dataKey="income"
                             fill="#22c55e"

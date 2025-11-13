@@ -18,7 +18,8 @@ export function TopCategories() {
                         className="flex justify-between text-neutral-300 text-sm border-b border-neutral-800 pb-3 pt-0.5"
                     >
                         <span>{c.category}</span>
-                        <span className="text-neutral-400">₹{c.total}</span>
+                        {/* TODO: Apply user currency symbol */}
+                        <span className="text-neutral-400">${c.total}</span>
                     </li>
                 ))}
             </ul>

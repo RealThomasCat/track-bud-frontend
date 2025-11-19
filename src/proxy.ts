@@ -16,10 +16,33 @@ const PUBLIC_PATHS = ["/login", "/signup"];
  * which validates the user's session using HttpOnly cookies.
  */
 export async function proxy(req: NextRequest) {
+    // DEBUG LOGGING
+    console.log("RUNNING UPDATED PROXY FILE: ", Date.now());
+
     const path = req.nextUrl.pathname;
 
-    // Skip all /auth/* routes so the browser can handle cookies directly
+    // Skip all auth API routes (login, signup, logout)
     if (path.startsWith("/auth")) {
+        return NextResponse.next();
+    }
+
+    // Skip POST requests
+    if (req.method === "POST") {
+        return NextResponse.next();
+    }
+
+    // Skip OPTIONS requests (CORS preflight)
+    if (req.method === "OPTIONS") {
+        return NextResponse.next();
+    }
+
+    // Skip Next.js API routes
+    if (path.startsWith("/api")) {
+        return NextResponse.next();
+    }
+
+    // Skip static assets
+    if (path.startsWith("/_next") || path.startsWith("/favicon.ico")) {
         return NextResponse.next();
     }
 

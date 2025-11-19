@@ -1,55 +1,34 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-// Public routes that do not require authentication
+// Publicly accessible pages
 const PUBLIC_PATHS = ["/login", "/signup"];
 
 /**
- * Proxy responsible for route protection.
+ * Global authentication proxy.
  *
- * This runs before the request reaches any page and ensures:
- *  - Authenticated users access protected pages normally.
- *  - Unauthenticated users are redirected to /login.
- *  - Logged-in users cannot access /login or /signup.
- *
- * It determines authentication by calling the backend's /auth/me endpoint,
- * which validates the user's session using HttpOnly cookies.
+ * This protects routes by asking the backend whether the user is authenticated.
+ * We do NOT read cookies here because the auth cookie lives on the backend domain.
+ * Instead, we call /auth/me, which validates the session using backend cookies.
  */
 export async function proxy(req: NextRequest) {
-    // DEBUG LOGGING
-    console.log("RUNNING UPDATED PROXY FILE: ", Date.now());
-
     const path = req.nextUrl.pathname;
 
-    // Skip all auth API routes (login, signup, logout)
+    // Skip API routes and static assets
+    if (
+        path.startsWith("/api") ||
+        path.startsWith("/_next") ||
+        path.startsWith("/favicon.ico")
+    ) {
+        return NextResponse.next();
+    }
+
+    // Allow browser → backend login/signup/logout requests
     if (path.startsWith("/auth")) {
         return NextResponse.next();
     }
 
-    // Skip POST requests
-    if (req.method === "POST") {
-        return NextResponse.next();
-    }
-
-    // Skip OPTIONS requests (CORS preflight)
-    if (req.method === "OPTIONS") {
-        return NextResponse.next();
-    }
-
-    // Skip Next.js API routes
-    if (path.startsWith("/api")) {
-        return NextResponse.next();
-    }
-
-    // Skip static assets
-    if (path.startsWith("/_next") || path.startsWith("/favicon.ico")) {
-        return NextResponse.next();
-    }
-
-    // STEP 1 — Check authentication state via backend /auth/me
-    // Since the backend handles all cookie/session validation,
-    // we simply forward any cookies from this request to the backend.
-    // If the session is valid, /auth/me returns 200.
+    // Determine authentication by asking backend
     const authResponse = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/auth/me`,
         {
@@ -63,40 +42,30 @@ export async function proxy(req: NextRequest) {
 
     const isLoggedIn = authResponse.status === 200;
 
-    // STEP 2 — Block access to protected routes when not logged in
+    // Not logged in → trying to access protected route
     if (!isLoggedIn && !PUBLIC_PATHS.includes(path)) {
         return NextResponse.redirect(new URL("/login", req.url));
     }
 
-    // STEP 3 — Prevent authenticated users from visiting public pages
+    // Already authenticated → trying to access /login or /signup
     if (isLoggedIn && PUBLIC_PATHS.includes(path)) {
         return NextResponse.redirect(new URL("/dashboard", req.url));
     }
 
-    // STEP 4 — Allow request to continue normally
+    // Allow request to proceed
     return NextResponse.next();
 }
 
-/**
- * Apply proxy to all routes except Next.js internals:
- *  - /_next (framework assets)
- *  - /api (API routes)
- *  - /favicon.ico
- *
- * This ensures only real user-facing pages go through auth checks.
- */
+// Apply proxy to all pages except Next.js internals
 export const config = {
     matcher: ["/((?!_next|api|favicon.ico).*)"],
 };
 
 /**
  * Note:
+ * HttpOnly cookies issued by the backend cannot be read from the frontend domain.
+ * Therefore, route protection cannot use req.cookies in proxy.
  *
- * The previous implementation checked for the "token" cookie directly inside
- * Next.js proxy. This works when frontend and backend share the same domain
- * (like localhost), but fails in production when deployed on separate domains
- * (Vercel frontend + Render backend) because HttpOnly cookies are isolated per domain.
- *
- * The new approach delegates authentication to the backend via /auth/me,
- * ensuring consistent session validation across different domains.
+ * We delegate authentication to the backend /auth/me endpoint,
+ * which safely validates the user's session using backend-managed cookies.
  */

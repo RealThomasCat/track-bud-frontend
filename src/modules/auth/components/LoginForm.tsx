@@ -1,4 +1,5 @@
 "use client";
+
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, LoginInput } from "../schemas/auth.schemas";
@@ -9,14 +10,14 @@ import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { FormError } from "@/components/ui/FormError";
 import { useState } from "react";
+import Link from "next/link";
 import { AuthService } from "../services/auth.service";
 
 export function LoginForm() {
     const router = useRouter();
-    const { setUser } = useAuthStore();
+    const { fetchUser } = useAuthStore();
     const [apiError, setApiError] = useState<string | null>(null);
 
-    // Initialize form with Zod validation
     const {
         register,
         handleSubmit,
@@ -25,52 +26,65 @@ export function LoginForm() {
         resolver: zodResolver(loginSchema),
     });
 
-    // Submit handler
+    // Handle login
     const onSubmit = async (data: LoginInput) => {
         setApiError(null);
-
         try {
-            const user = await AuthService.login(data);
-            setUser(user);
+            await AuthService.login(data);
+            await fetchUser();
             router.replace("/dashboard");
-        } catch (err: unknown) {
+        } catch (err) {
             setApiError(extractErrorMessage(err));
         }
     };
 
     return (
-        <form
-            onSubmit={handleSubmit(onSubmit)}
-            className="flex flex-col gap-4 w-full max-w-sm mx-auto mt-10"
-        >
-            <h1 className="text-2xl font-semibold text-center">Login</h1>
-
-            <Input
-                label="Email"
-                placeholder="email@example.com"
-                {...register("email")}
-                error={errors.email}
-            />
-
-            <Input
-                label="Password"
-                type="password"
-                placeholder="••••••••"
-                {...register("password")}
-                error={errors.password}
-            />
-
-            <Button
-                type="submit"
-                variant="primary"
-                loading={isSubmitting}
-                disabled={isSubmitting}
+        <div className="min-h-screen flex items-center justify-center px-4 bg-neutral-900">
+            <form
+                onSubmit={handleSubmit(onSubmit)}
+                className="bg-neutral-900 border border-neutral-800 p-8 rounded-xl w-full max-w-sm shadow-md flex flex-col gap-5"
             >
-                Login
-            </Button>
+                <h1 className="text-xl font-semibold text-neutral-100 text-center">
+                    Login
+                </h1>
 
-            {/* Api Error */}
-            <FormError message={apiError ?? undefined} />
-        </form>
+                <Input
+                    label="Email"
+                    placeholder="email@example.com"
+                    {...register("email")}
+                    error={errors.email}
+                />
+
+                <Input
+                    label="Password"
+                    type="password"
+                    placeholder="••••••••"
+                    {...register("password")}
+                    error={errors.password}
+                />
+
+                <Button
+                    type="submit"
+                    variant="primary"
+                    loading={isSubmitting}
+                    disabled={isSubmitting}
+                >
+                    Login
+                </Button>
+
+                <FormError message={apiError ?? undefined} />
+
+                {/* Signup link */}
+                <p className="text-sm text-neutral-400 text-center">
+                    Don&apos;t have an account?{" "}
+                    <Link
+                        href="/signup"
+                        className="text-emerald-500 hover:text-emerald-400 transition"
+                    >
+                        Create one
+                    </Link>
+                </p>
+            </form>
+        </div>
     );
 }

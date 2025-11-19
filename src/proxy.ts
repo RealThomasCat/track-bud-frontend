@@ -16,12 +16,12 @@ const PUBLIC_PATHS = ["/login", "/signup"];
  * which validates the user's session using HttpOnly cookies.
  */
 export async function proxy(req: NextRequest) {
-    // Ignore POST requests so that browser receives Set-Cookie directly
-    if (req.method === "POST") {
+    const path = req.nextUrl.pathname;
+
+    // Skip all /auth/* routes so the browser can handle cookies directly
+    if (path.startsWith("/auth")) {
         return NextResponse.next();
     }
-
-    const path = req.nextUrl.pathname;
 
     // STEP 1 — Check authentication state via backend /auth/me
     // Since the backend handles all cookie/session validation,

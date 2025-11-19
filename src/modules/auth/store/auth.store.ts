@@ -1,29 +1,32 @@
 "use client";
+
 import { create } from "zustand";
 import { AuthService } from "../services/auth.service";
-import { AuthUser } from "../schemas/auth.schemas";
+import type { AuthUser } from "../schemas/auth.schemas";
 
-// Auth state type definition (state + actions)
+// Auth State + Actions
 type AuthState = {
     user: AuthUser | null;
     loading: boolean;
+
     setUser: (user: AuthUser | null) => void;
-    fetchMe: () => Promise<void>;
+    fetchUser: () => Promise<void>;
     logout: () => Promise<void>;
 };
 
-// Creating a store function that returns useAuthStore hook that can both read and mutate auth state
 export const useAuthStore = create<AuthState>((set) => ({
     // Initial state
     user: null,
-    loading: false,
+    loading: true,
 
     // Action to set user
     setUser: (user) => set(() => ({ user })),
 
-    // Action to fetch current user
-    fetchMe: async () => {
+    // Action to fetch current authenticated user
+    // Called once on app load (in RootLayout).
+    fetchUser: async () => {
         set({ loading: true });
+
         try {
             const user = await AuthService.me();
             set({ user });
@@ -34,11 +37,14 @@ export const useAuthStore = create<AuthState>((set) => ({
         }
     },
 
-    // Action to logout user
+    // Action to logout
     logout: async () => {
         set({ loading: true });
         try {
             await AuthService.logout();
+            set({ user: null });
+        } catch {
+            // In case backend logout fails, still clear local state
             set({ user: null });
         } finally {
             set({ loading: false });

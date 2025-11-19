@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { AuthInitializer } from "@/components/auth/AuthInitializer";
 
 export const metadata: Metadata = {
     title: "TrackBud",
@@ -15,6 +16,8 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body className="antialiased bg-gray-50 text-gray-900">
+                {/* Client-side auth (fetchUser) lives here */}
+                <AuthInitializer />
                 {children}
             </body>
         </html>

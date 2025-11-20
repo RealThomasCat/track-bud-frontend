@@ -61,7 +61,7 @@ export function ChartsSection() {
         <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Monthly Income vs Expense */}
             <div className="bg-neutral-900 border border-neutral-800 rounded-xl p-5 pb-12">
-                <h2 className="text-lg font-semibold mb-4 text-neutral-100">
+                <h2 className="text-lg font-semibold mb-8 text-neutral-100">
                     Monthly Overview
                 </h2>
                 <ResponsiveContainer width="100%" height="95%">
@@ -107,7 +107,7 @@ export function ChartsSection() {
 
             {/* Category-wise Distribution */}
             <div className="bg-neutral-900 border border-neutral-800 rounded-xl p-5 flex flex-col items-center">
-                <h2 className="text-lg font-semibold mb-4 text-neutral-100">
+                <h2 className="text-lg font-semibold mb-8 text-neutral-100">
                     By Category
                 </h2>
 

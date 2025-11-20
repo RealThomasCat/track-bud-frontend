@@ -62,7 +62,7 @@ export function Categories() {
     return (
         <div className="bg-neutral-900 border border-neutral-800 rounded-xl p-5 mt-6">
             {/* Header */}
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-5">
                 <h2 className="text-lg font-semibold text-neutral-100">
                     Your Categories
                 </h2>
@@ -86,7 +86,7 @@ export function Categories() {
                             key={c.id}
                             className="flex items-center justify-between bg-neutral-800/60 border border-neutral-700 rounded-lg px-3 py-2 text-sm text-neutral-300 hover:bg-neutral-800 transition"
                         >
-                            <span className="font-medium text-neutral-200 truncate">
+                            <span className="text-neutral-300 truncate">
                                 {c.name}
                             </span>
 

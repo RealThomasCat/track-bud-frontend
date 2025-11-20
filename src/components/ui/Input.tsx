@@ -3,10 +3,6 @@ import { InputHTMLAttributes } from "react";
 import { cn } from "@/lib/utils";
 import { FieldError } from "react-hook-form";
 
-// Input component
-// Accepts label, error, and all input props
-// Displays consistent styling and error text
-
 type InputProps = InputHTMLAttributes<HTMLInputElement> & {
     label?: string;
     error?: FieldError;
@@ -14,7 +10,7 @@ type InputProps = InputHTMLAttributes<HTMLInputElement> & {
 
 export function Input({ label, error, className, ...props }: InputProps) {
     return (
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-1 w-full">
             {label && (
                 <label
                     htmlFor={props.id}
@@ -27,13 +23,18 @@ export function Input({ label, error, className, ...props }: InputProps) {
             <input
                 {...props}
                 className={cn(
-                    "p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500",
-                    error && "border-red-500 focus:ring-red-500",
+                    "w-full rounded-md px-3 py-2 bg-neutral-800 text-neutral-100",
+                    "border border-neutral-700 placeholder:text-neutral-500",
+                    "focus:outline-none focus:ring-1 focus:ring-emerald-600 focus:border-emerald-600",
+                    error &&
+                        "border-rose-600 focus:ring-rose-600 focus:border-rose-600",
                     className
                 )}
             />
 
-            {error && <p className="text-red-500 text-sm">{error.message}</p>}
+            {error && (
+                <p className="text-rose-500 text-sm mt-1">{error.message}</p>
+            )}
         </div>
     );
 }

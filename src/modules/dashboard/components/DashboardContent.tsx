@@ -22,23 +22,37 @@ export function DashboardContent() {
     }, [fetchAll]);
 
     return (
-        <div className="min-h-screen p-8 bg-neutral-950 text-neutral-200">
-            <div className="flex justify-between items-center mb-8">
-                <div>
-                    <h1 className="text-3xl font-bold text-white">Dashboard</h1>
-                    <p className="text-neutral-500">Welcome, {user?.name}</p>
+        <div className="min-h-screen p-8">
+            <div className="flex flex-col mb-4">
+                <div className="flex justify-between items-center mb-8">
+                    <div>
+                        <h1 className="text-3xl font-bold text-white">
+                            Track<span className="text-emerald-500">Bud</span>
+                        </h1>
+                        {/* <p className="text-neutral-400">Welcome, {user?.name}</p> */}
+                    </div>
+
+                    <Button
+                        className="max-w-40"
+                        variant="danger"
+                        onClick={async () => {
+                            await logout();
+                            router.push("/login");
+                        }}
+                    >
+                        Logout
+                    </Button>
                 </div>
 
-                <Button
-                    className="max-w-40"
-                    variant="danger"
-                    onClick={async () => {
-                        await logout();
-                        router.push("/login");
-                    }}
-                >
-                    Logout
-                </Button>
+                <div className="flex flex-col">
+                    <h1 className="text-lg text-neutral-100 font-semibold capitalize">
+                        {user?.name?.split(" ")[0]}&apos;s Dashboard
+                    </h1>
+                </div>
+
+                {/* <h1 className="text-lg font-semibold text-neutral-100">
+                    Welcome to your dashboard, {user?.name}!
+                </h1> */}
             </div>
 
             {dashboardLoading ? (

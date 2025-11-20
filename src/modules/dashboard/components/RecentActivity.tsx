@@ -20,7 +20,7 @@ export function RecentActivity() {
     return (
         <div className="bg-neutral-900 border border-neutral-800 rounded-xl p-5 mt-6">
             {/* HEADER WITH BUTTONS */}
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-2">
                 <h2 className="text-lg font-semibold text-neutral-100">
                     Recent Activity
                 </h2>

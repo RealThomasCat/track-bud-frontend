@@ -15,7 +15,7 @@ export default function RootLayout({
 }) {
     return (
         <html lang="en">
-            <body className="antialiased bg-gray-50 text-gray-900">
+            <body className="antialiased">
                 {/* Client-side auth (fetchUser) lives here */}
                 <AuthInitializer />
                 {children}

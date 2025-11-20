@@ -2,10 +2,6 @@
 import { ButtonHTMLAttributes } from "react";
 import { cn } from "@/lib/utils";
 
-// Button component
-// Handles all button variants
-// Supports disabled + loading states
-
 type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
     variant?: "primary" | "secondary" | "danger";
     loading?: boolean;
@@ -19,12 +15,14 @@ export function Button({
     ...props
 }: ButtonProps) {
     const baseStyles =
-        "w-full py-2 rounded-md text-white font-medium transition-colors disabled:opacity-70 disabled:cursor-not-allowed";
+        "w-full py-2 rounded-md font-medium transition-colors disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer text-sm";
 
     const variants = {
-        primary: "bg-blue-600 hover:bg-blue-700",
-        secondary: "bg-gray-600 hover:bg-gray-700",
-        danger: "bg-red-600 hover:bg-red-700",
+        primary:
+            "bg-emerald-500 hover:bg-emerald-400 text-white border border-emerald-500",
+        secondary:
+            "border border-neutral-700 text-neutral-300 hover:bg-neutral-800",
+        danger: "bg-rose-500 hover:bg-rose-600 text-white border border-rose-500",
     };
 
     return (

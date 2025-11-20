@@ -8,7 +8,7 @@ export function TopCategories() {
 
     return (
         <div className="bg-neutral-900 border border-neutral-800 rounded-xl p-5 mt-6">
-            <h2 className="text-lg font-semibold mb-4 text-neutral-100">
+            <h2 className="text-lg font-semibold mb-5 text-neutral-100">
                 Top Spending Categories
             </h2>
             <ul className="space-y-2">

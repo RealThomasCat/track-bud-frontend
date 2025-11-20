@@ -36,7 +36,7 @@ export function SignupForm() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center px-4 bg-neutral-900">
+        <div className="min-h-screen flex items-center justify-center px-4">
             <form
                 onSubmit={handleSubmit(onSubmit)}
                 className="bg-neutral-900 border border-neutral-800 p-8 rounded-xl w-full max-w-sm shadow-md flex flex-col gap-5"

@@ -1,28 +1,39 @@
 @import "tailwindcss";
-/* @import "tw-animate-css"; */
 
-/* Base styles */
-html, body {
-  height: 100%;
-  background-color: #f9fafb; /* subtle light gray */
-  color: #111827; /* dark text */
-  font-family: system-ui, sans-serif;
+/* GLOBAL THEME VARIABLES */
+:root {
+    /* Light mode theme */
+    --bg-root: #f9fafb;
+    --text-root: #111827;
 }
 
-/* Optional dark theme defaults */
 @media (prefers-color-scheme: dark) {
-  html, body {
-    background-color: #0a0a0a;
-    color: #f3f4f6;
-  }
+    :root {
+        /* Dark mode theme (default) */
+        --bg-root: #101010;
+        --text-root: #f3f4f6;
+    }
 }
 
-/* Hide scrollbar but keep scroll functionality */
+/* GLOBAL RESET */
+html,
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+
+    background-color: var(--bg-root);
+    color: var(--text-root);
+
+    font-family: system-ui, sans-serif;
+}
+
+/* SCROLLBAR HIDE UTILITY */
 .scrollbar-hide::-webkit-scrollbar {
-  display: none;
+    display: none;
 }
 
 .scrollbar-hide {
-  -ms-overflow-style: none; /* IE + Edge */
-  scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }

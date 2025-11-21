@@ -26,7 +26,7 @@ export function DashboardContent() {
             <div className="flex flex-col mb-4">
                 <div className="flex justify-between items-center mb-8">
                     <div>
-                        <h1 className="text-3xl font-bold text-white">
+                        <h1 className="text-3xl font-bold text-neutral-200">
                             Track<span className="text-emerald-500">Bud</span>
                         </h1>
                         {/* <p className="text-neutral-400">Welcome, {user?.name}</p> */}
@@ -34,7 +34,7 @@ export function DashboardContent() {
 
                     <Button
                         className="max-w-40"
-                        variant="danger"
+                        variant="secondary"
                         onClick={async () => {
                             await logout();
                             router.push("/login");

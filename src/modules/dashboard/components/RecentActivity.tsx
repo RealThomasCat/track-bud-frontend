@@ -28,7 +28,7 @@ export function RecentActivity() {
                 <div className="flex gap-3 max-w-80 w-full">
                     <Button
                         variant="secondary"
-                        className="text-white border-neutral-700 max-w-40"
+                        className="max-w-40"
                         onClick={() => setShowAllModal(true)}
                     >
                         View All
@@ -36,7 +36,7 @@ export function RecentActivity() {
 
                     <Button
                         variant="primary"
-                        className="bg-emerald-600 hover:bg-emerald-500 text-white max-w-40"
+                        className="max-w-40"
                         onClick={() => setShowAddDialog(true)}
                     >
                         Add Transaction

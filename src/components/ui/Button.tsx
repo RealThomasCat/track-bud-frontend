@@ -21,7 +21,7 @@ export function Button({
         primary:
             "bg-emerald-500 hover:bg-emerald-400 text-white border border-emerald-500",
         secondary:
-            "border border-neutral-700 text-neutral-300 hover:bg-neutral-800",
+            "border border-neutral-600 text-neutral-200 bg-neutral-900 hover:bg-neutral-800",
         danger: "bg-rose-500 hover:bg-rose-600 text-white border border-rose-500",
     };
 

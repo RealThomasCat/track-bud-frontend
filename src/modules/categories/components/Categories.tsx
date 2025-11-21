@@ -68,7 +68,7 @@ export function Categories() {
                 </h2>
                 <Button
                     onClick={() => setShowAddDialog(true)}
-                    className="bg-emerald-600 hover:bg-emerald-500 text-white max-w-40"
+                    className="max-w-40"
                 >
                     Add Category
                 </Button>

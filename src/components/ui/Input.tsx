@@ -23,8 +23,8 @@ export function Input({ label, error, className, ...props }: InputProps) {
             <input
                 {...props}
                 className={cn(
-                    "w-full rounded-md px-3 py-2 bg-neutral-800 text-neutral-100",
-                    "border border-neutral-700 placeholder:text-neutral-500",
+                    "w-full rounded-md px-3 py-2 bg-bg-black text-neutral-100",
+                    "border border-neutral-700 placeholder:text-neutral-600",
                     "focus:outline-none focus:ring-1 focus:ring-emerald-600 focus:border-emerald-600",
                     error &&
                         "border-rose-600 focus:ring-rose-600 focus:border-rose-600",

@@ -21,6 +21,7 @@ import {
     createTransactionSchema,
     Transaction,
 } from "../schemas/transaction.schemas";
+import { SelectField } from "@/components/ui/SelectField";
 
 type Props = {
     open: boolean;
@@ -43,17 +44,21 @@ export function AddTransactionDialog({
         register,
         handleSubmit,
         reset,
+        watch,
+        setValue,
         formState: { errors, isSubmitting },
     } = useForm<CreateTransactionInput>({
         resolver: zodResolver(createTransactionSchema),
         defaultValues: {
             amount: 0,
-            categoryId: 0,
-            kind: "expense",
+            categoryId: undefined,
+            kind: undefined,
             note: "",
             occurredAt: "",
         },
     });
+
+    const categoryValue = watch("categoryId");
 
     // Fetch categories when dialog opens
     useEffect(() => {
@@ -143,45 +148,35 @@ export function AddTransactionDialog({
                     />
 
                     {/* Category */}
-                    <div>
-                        <label className="text-sm font-medium text-neutral-300">
-                            Category
-                        </label>
-                        <select
-                            {...register("categoryId", { valueAsNumber: true })}
-                            disabled={isSubmitting}
-                            className="mt-1 w-full rounded-md bg-neutral-800 border border-neutral-700 text-neutral-100 p-2 text-sm"
-                        >
-                            <option value={0}>Select category</option>
-                            {categories
-                                .filter((c) => !c.isArchived)
-                                .map((c) => (
-                                    <option key={c.id} value={c.id}>
-                                        {c.name}
-                                    </option>
-                                ))}
-                        </select>
-                        {errors.categoryId && (
-                            <p className="text-rose-500 text-sm mt-1">
-                                {errors.categoryId.message}
-                            </p>
-                        )}
-                    </div>
+                    <SelectField
+                        label="Category"
+                        placeholder="Select category"
+                        error={errors.categoryId}
+                        value={categoryValue || undefined}
+                        onChange={(val) =>
+                            setValue("categoryId", Number(val), {
+                                shouldValidate: true,
+                            })
+                        }
+                        options={categories
+                            .filter((c) => !c.isArchived)
+                            .map((c) => ({ value: c.id, label: c.name }))}
+                    />
 
                     {/* Kind */}
-                    <div>
-                        <label className="text-sm font-medium text-neutral-300">
-                            Type
-                        </label>
-                        <select
-                            {...register("kind")}
-                            disabled={isSubmitting}
-                            className="mt-1 w-full rounded-md bg-neutral-800 border border-neutral-700 text-neutral-100 p-2 text-sm"
-                        >
-                            <option value="income">Income</option>
-                            <option value="expense">Expense</option>
-                        </select>
-                    </div>
+                    <SelectField
+                        label="Type"
+                        placeholder="Select type"
+                        error={errors.kind}
+                        value={watch("kind")}
+                        onChange={(val) =>
+                            setValue("kind", val as "income" | "expense")
+                        }
+                        options={[
+                            { value: "income", label: "Income" },
+                            { value: "expense", label: "Expense" },
+                        ]}
+                    />
 
                     {/* Note */}
                     <Input

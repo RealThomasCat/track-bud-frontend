@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+@theme {
+    --color-bg-black: #101010;
+}
+
 /* GLOBAL THEME VARIABLES */
 :root {
     /* Light mode theme */
@@ -10,8 +14,8 @@
 @media (prefers-color-scheme: dark) {
     :root {
         /* Dark mode theme (default) */
-        --bg-root: #101010;
-        --text-root: #f3f4f6;
+        --bg-root: var(--color-bg-black);
+        --text-root: #ffffff;
     }
 }
 
@@ -36,4 +40,16 @@ body {
 .scrollbar-hide {
     -ms-overflow-style: none;
     scrollbar-width: none;
+}
+
+/* REMOVE NUMBER INPUT ARROWS (Chrome, Edge, Safari) */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* MAKE THE DATE PICKER ICON WHITE */
+input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
 }

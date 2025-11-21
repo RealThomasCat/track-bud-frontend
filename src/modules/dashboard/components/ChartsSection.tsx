@@ -6,7 +6,6 @@ import {
     Bar,
     XAxis,
     YAxis,
-    Legend,
     PieChart,
     Pie,
     Cell,

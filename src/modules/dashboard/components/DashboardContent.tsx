@@ -11,6 +11,9 @@ import { RecentActivity } from "@/modules/dashboard/components/RecentActivity";
 import { ChartsSection } from "@/modules/dashboard/components/ChartsSection";
 import { TopCategories } from "@/modules/dashboard/components/TopCategories";
 import { Categories } from "@/modules/categories/components/Categories";
+import { AiSpendingSummary } from "@/modules/ai/components/AiSpendingSummary";
+import { AiSavingRecommendations } from "@/modules/ai/components/AiSavingRecommendations";
+import { AiForecast } from "@/modules/ai/components/AiForcast";
 
 export function DashboardContent() {
     const router = useRouter();
@@ -63,6 +66,9 @@ export function DashboardContent() {
                 <>
                     <SummaryCards />
                     <RecentActivity />
+                    <AiSpendingSummary />
+                    <AiSavingRecommendations />
+                    <AiForecast />
                     <ChartsSection />
                     <TopCategories />
                     <Categories />

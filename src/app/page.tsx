@@ -25,7 +25,7 @@ export default function Home() {
 
                     {/* CTA Button */}
                     <Link href="/dashboard" className="mt-3 w-fit">
-                        <button className="px-8 py-3 rounded-md bg-emerald-500 hover:bg-emerald-400 transition-colors text-white font-medium text-lg uppercase">
+                        <button className="px-8 py-3 rounded-md bg-emerald-500 hover:bg-emerald-400 transition-colors text-white font-medium text-lg uppercase cursor-pointer">
                             Get Started
                         </button>
                     </Link>

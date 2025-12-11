@@ -5,15 +5,12 @@ import { useDashboardStore } from "../store/dashboard.store";
 import { Button } from "@/components/ui/Button";
 import { AddTransactionDialog } from "@/modules/transactions/components/AddTransactionDialog";
 import { TransactionsModal } from "@/modules/transactions/components/TransactionsModal";
-import { useTransactionStore } from "@/modules/transactions/store/transaction.store";
 
 export function RecentActivity() {
     const { recentActivity } = useDashboardStore();
 
     const [showAddDialog, setShowAddDialog] = useState(false);
     const [showAllModal, setShowAllModal] = useState(false);
-
-    const { addTransaction } = useTransactionStore();
 
     if (!recentActivity?.length) return null;
 
@@ -81,7 +78,6 @@ export function RecentActivity() {
                 <AddTransactionDialog
                     open={showAddDialog}
                     onClose={() => setShowAddDialog(false)}
-                    onTransactionCreated={addTransaction}
                 />
             )}
 

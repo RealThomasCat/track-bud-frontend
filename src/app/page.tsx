@@ -4,16 +4,16 @@ import heroImage from "@/assets/hero.png";
 
 export default function Home() {
     return (
-        <main className="min-h-screen flex items-center justify-center px-6 md:px-10 bg-neutral-900">
+        <main className="min-h-screen flex items-center justify-center px-6 md:px-10">
             <div className="flex flex-col md:flex-row justify-between items-center w-full max-w-6xl py-20">
                 {/* Left: Hero Content */}
                 <div className="flex flex-col w-full md:w-1/2 gap-8">
-                    <h1 className="text-4xl md:text-7xl font-bold text-neutral-100 leading-tighter uppercase">
-                        Intelligent
+                    <h1 className="text-4xl md:text-[4rem] font-bold text-neutral-100 leading-tighter uppercase">
+                        Powerful
                         <br />
-                        <span className="text-neutral-100">Wallet App</span>
+                        <span className="text-neutral-100">Insights For</span>
                         <br />
-                        For You
+                        Your Finances
                     </h1>
 
                     {/* Keywords Row */}
@@ -36,7 +36,7 @@ export default function Home() {
                     <Image
                         src={heroImage}
                         alt="TrackBud Hero"
-                        className="h-120 w-auto object-contain"
+                        className="h-100 w-auto object-contain"
                     />
                 </div>
             </div>

@@ -1,31 +1,63 @@
 "use client";
 
 import { create } from "zustand";
-import { Category } from "../schemas/category.schemas";
+import { Category, CreateCategoryInput } from "../schemas/category.schemas";
+import { CategoryService } from "../services/category.service";
+import { extractErrorMessage } from "@/lib/utils";
 
 type CategoryState = {
     categories: Category[];
-    setCategories: (categories: Category[]) => void;
-    addCategory: (category: Category) => void;
-    removeCategory: (id: number) => void;
+    loading: boolean;
+    error: string | null;
+
+    fetchAllCategories: () => Promise<void>;
+    addCategory: (data: CreateCategoryInput) => Promise<void>;
+    removeCategory: (id: number) => Promise<void>;
 };
 
 export const useCategoryStore = create<CategoryState>((set) => ({
-    // Initial State
     categories: [],
+    loading: false,
+    error: null,
 
-    // Action to set categories
-    setCategories: (categories) => set({ categories }),
+    // Fetch all categories once
+    fetchAllCategories: async () => {
+        set({ loading: true, error: null });
+        try {
+            const data = await CategoryService.getAll();
+            set({ categories: data });
+        } catch (err: unknown) {
+            set({ error: extractErrorMessage(err) });
+        } finally {
+            set({ loading: false });
+        }
+    },
 
-    // Action to add category
-    addCategory: (category) =>
-        set((state) => ({
-            categories: [...state.categories, category],
-        })),
+    // Create category
+    addCategory: async (input) => {
+        try {
+            const newCategory = await CategoryService.create(input);
 
-    // Action to remove category by ID
-    removeCategory: (id) =>
-        set((state) => ({
-            categories: state.categories.filter((c) => c.id !== id),
-        })),
+            // prepend new category
+            set((state) => ({
+                categories: [...state.categories, newCategory],
+            }));
+        } catch (err: unknown) {
+            throw err; // let UI handle errors
+        }
+    },
+
+    // Archive/Delete category
+    removeCategory: async (id) => {
+        try {
+            await CategoryService.delete({ id });
+
+            // remove locally
+            set((state) => ({
+                categories: state.categories.filter((c) => c.id !== id),
+            }));
+        } catch (err: unknown) {
+            throw err;
+        }
+    },
 }));

@@ -1,40 +1,25 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { CategoryService } from "../services/category.service";
 import { useCategoryStore } from "../store/category.store";
 import { AddCategoryDialog } from "./AddCategoryDialog";
 import { DeleteCategoryDialog } from "./DeleteCategoryDialog";
+
 import { Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
-import { extractErrorMessage } from "@/lib/utils";
 
 export function Categories() {
-    const { categories, setCategories, removeCategory, addCategory } =
+    const { categories, fetchAllCategories, loading, error } =
         useCategoryStore();
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
+
     const [showAddDialog, setShowAddDialog] = useState(false);
     const [deleteId, setDeleteId] = useState<number | null>(null);
 
-    // Fetch categories on mount
+    // Fetch on mount
     useEffect(() => {
-        const fetchData = async () => {
-            setLoading(true);
-            setError(null);
-            try {
-                const data = await CategoryService.getAll();
-                setCategories(data);
-            } catch (err: unknown) {
-                setError(extractErrorMessage(err));
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchData();
-    }, [setCategories]);
+        fetchAllCategories();
+    }, [fetchAllCategories]);
 
-    // Derived data: only active categories
     const activeCategories = categories.filter((c) => !c.isArchived);
 
     if (loading)
@@ -50,7 +35,7 @@ export function Categories() {
                 </h2>
                 <p className="text-sm text-rose-500 mb-3">{error}</p>
                 <Button
-                    onClick={() => window.location.reload()}
+                    onClick={() => fetchAllCategories()}
                     variant="secondary"
                     className="text-neutral-300 hover:bg-neutral-800"
                 >
@@ -61,7 +46,6 @@ export function Categories() {
 
     return (
         <div className="bg-neutral-900 border border-neutral-800 rounded-xl p-5 mt-6">
-            {/* Header */}
             <div className="flex items-center justify-between mb-5">
                 <h2 className="text-lg font-semibold text-neutral-100">
                     Your Categories
@@ -74,7 +58,6 @@ export function Categories() {
                 </Button>
             </div>
 
-            {/* Empty state */}
             {!activeCategories.length ? (
                 <p className="text-neutral-400 text-sm">
                     No categories yet. Add one to get started!
@@ -94,7 +77,6 @@ export function Categories() {
                                 <button
                                     onClick={() => setDeleteId(c.id)}
                                     className="text-neutral-500 hover:text-rose-500 transition"
-                                    title="Delete Category"
                                 >
                                     <Trash2 className="w-4 h-4" />
                                 </button>
@@ -104,22 +86,18 @@ export function Categories() {
                 </div>
             )}
 
-            {/* Add Category Dialog */}
             {showAddDialog && (
                 <AddCategoryDialog
                     open={showAddDialog}
                     onClose={() => setShowAddDialog(false)}
-                    onCategoryCreated={addCategory} // Callback prop to update store
                 />
             )}
 
-            {/* Delete Confirmation Dialog */}
             {deleteId && (
                 <DeleteCategoryDialog
                     categoryId={deleteId}
                     open={!!deleteId}
                     onClose={() => setDeleteId(null)}
-                    onCategoryDeleted={removeCategory} // Callback prop to update store
                 />
             )}
         </div>

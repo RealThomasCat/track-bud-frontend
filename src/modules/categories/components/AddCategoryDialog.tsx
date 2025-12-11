@@ -3,33 +3,34 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+
 import {
     Dialog,
     DialogContent,
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog";
+
 import {
-    Category,
     CreateCategoryInput,
     createCategorySchema,
 } from "../schemas/category.schemas";
+
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { extractErrorMessage } from "@/lib/utils";
-import { CategoryService } from "../services/category.service";
 import { FormError } from "@/components/ui/FormError";
+import { useCategoryStore } from "../store/category.store";
 
 type Props = {
     open: boolean;
     onClose: () => void;
-    onCategoryCreated: (category: Category) => void;
 };
 
-export function AddCategoryDialog({ open, onClose, onCategoryCreated }: Props) {
+export function AddCategoryDialog({ open, onClose }: Props) {
+    const { addCategory } = useCategoryStore();
     const [apiError, setApiError] = useState<string | null>(null);
 
-    // Initialize form with Zod validation (same as LoginForm)
     const {
         register,
         handleSubmit,
@@ -40,12 +41,11 @@ export function AddCategoryDialog({ open, onClose, onCategoryCreated }: Props) {
         defaultValues: { name: "" },
     });
 
-    // Submit handler
     const onSubmit = async (data: CreateCategoryInput) => {
         setApiError(null);
+
         try {
-            const newCategory = await CategoryService.create(data);
-            onCategoryCreated(newCategory);
+            await addCategory(data);
             reset();
             onClose();
         } catch (err: unknown) {
@@ -65,9 +65,7 @@ export function AddCategoryDialog({ open, onClose, onCategoryCreated }: Props) {
                 <form
                     onSubmit={handleSubmit(onSubmit)}
                     className="flex flex-col gap-4 mt-2"
-                    noValidate
                 >
-                    {/* Category Name */}
                     <Input
                         label="Category Name"
                         placeholder="e.g. Groceries"
@@ -76,7 +74,6 @@ export function AddCategoryDialog({ open, onClose, onCategoryCreated }: Props) {
                         error={errors.name}
                     />
 
-                    {/* API Error */}
                     <FormError message={apiError ?? undefined} />
 
                     <div className="flex justify-end">

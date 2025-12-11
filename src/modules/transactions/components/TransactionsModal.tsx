@@ -10,8 +10,6 @@ import { useEffect, useState } from "react";
 import { Trash2 } from "lucide-react";
 import { useCategoryStore } from "@/modules/categories/store/category.store";
 import { useTransactionStore } from "../store/transaction.store";
-import { CategoryService } from "@/modules/categories/services/category.service";
-import { TransactionService } from "../services/transaction.service";
 import { DeleteTransactionDialog } from "./DeleteTransactionDialog";
 import { extractErrorMessage } from "@/lib/utils";
 
@@ -21,9 +19,8 @@ type Props = {
 };
 
 export function TransactionsModal({ open, onClose }: Props) {
-    const { categories, setCategories } = useCategoryStore();
-    const { transactions, setTransactions, removeTransaction } =
-        useTransactionStore();
+    const { categories, fetchAllCategories } = useCategoryStore();
+    const { transactions, fetchAllTransactions } = useTransactionStore();
 
     const [deleteId, setDeleteId] = useState<number | null>(null);
     const [loading, setLoading] = useState(false);
@@ -36,12 +33,9 @@ export function TransactionsModal({ open, onClose }: Props) {
             setLoading(true);
             setError(null);
             try {
-                const txns = await TransactionService.getAll();
-                setTransactions(txns);
-
+                await fetchAllTransactions();
                 if (!categories.length) {
-                    const cats = await CategoryService.getAll();
-                    setCategories(cats);
+                    await fetchAllCategories();
                 }
             } catch (err) {
                 setError(extractErrorMessage(err));
@@ -51,7 +45,7 @@ export function TransactionsModal({ open, onClose }: Props) {
         };
 
         load();
-    }, [open, categories.length, setCategories, setTransactions]);
+    }, [open, categories.length, fetchAllCategories, fetchAllTransactions]);
 
     const getCategoryName = (id: number) =>
         categories.find((c) => c.id === id)?.name ?? "Uncategorized";
@@ -126,7 +120,6 @@ export function TransactionsModal({ open, onClose }: Props) {
                         transactionId={deleteId}
                         open={!!deleteId}
                         onClose={() => setDeleteId(null)}
-                        onTransactionDeleted={removeTransaction}
                     />
                 )}
             </DialogContent>

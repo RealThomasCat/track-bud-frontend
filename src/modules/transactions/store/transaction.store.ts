@@ -2,41 +2,53 @@
 
 import { create } from "zustand";
 import { Transaction } from "../schemas/transaction.schemas";
+import { TransactionService } from "../services/transaction.service";
 import { useDashboardStore } from "@/modules/dashboard/store/dashboard.store";
 
 type TransactionState = {
     transactions: Transaction[];
-    setTransactions: (transactions: Transaction[]) => void;
-    addTransaction: (transaction: Transaction) => void;
-    removeTransaction: (id: number) => void;
+    loading: boolean;
+    error: string | null;
+
+    fetchAllTransactions: () => Promise<void>;
+    addTransaction: (txn: Transaction) => Promise<void>;
+    removeTransaction: (id: number) => Promise<void>;
 };
 
 export const useTransactionStore = create<TransactionState>((set) => ({
-    // Initial State
     transactions: [],
+    loading: false,
+    error: null,
 
-    // Action to set transactions
-    setTransactions: (transactions) => set({ transactions }),
-
-    // Action to add transaction
-    addTransaction: async (transaction) => {
-        set((state) => ({
-            transactions: [transaction, ...state.transactions],
-        }));
-
-        // Trigger dashboard refresh after addition
-        const { fetchAll } = useDashboardStore.getState();
-        await fetchAll();
+    // Fetch all transactions from the API
+    fetchAllTransactions: async () => {
+        set({ loading: true, error: null });
+        try {
+            const data = await TransactionService.getAll();
+            set({ transactions: data });
+        } catch (err: unknown) {
+            set({
+                error:
+                    err instanceof Error
+                        ? err.message
+                        : "Error fetching transactions",
+            });
+        } finally {
+            set({ loading: false });
+        }
     },
 
-    // Action to remove transaction by ID
-    removeTransaction: async (id) => {
-        set((state) => ({
-            transactions: state.transactions.filter((t) => t.id !== id),
-        }));
+    // Add a new transaction and sync dashboard store
+    addTransaction: async (txn) => {
+        set((s) => ({ transactions: [txn, ...s.transactions] }));
+        await useDashboardStore.getState().fetchAll(); // keep dashboard in sync
+    },
 
-        // Trigger dashboard refresh after deletion
-        const { fetchAll } = useDashboardStore.getState();
-        await fetchAll();
+    // Remove a transaction by ID and sync dashboard store
+    removeTransaction: async (id) => {
+        set((s) => ({
+            transactions: s.transactions.filter((t) => t.id !== id),
+        }));
+        await useDashboardStore.getState().fetchAll();
     },
 }));

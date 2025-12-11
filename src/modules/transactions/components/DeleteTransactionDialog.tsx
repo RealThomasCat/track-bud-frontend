@@ -12,19 +12,18 @@ import { Button } from "@/components/ui/Button";
 import { extractErrorMessage } from "@/lib/utils";
 import { FormError } from "@/components/ui/FormError";
 import { TransactionService } from "../services/transaction.service";
+import { useTransactionStore } from "../store/transaction.store";
 
 type Props = {
     transactionId: number;
     open: boolean;
     onClose: () => void;
-    onTransactionDeleted: (id: number) => void;
 };
 
 export function DeleteTransactionDialog({
     transactionId,
     open,
     onClose,
-    onTransactionDeleted,
 }: Props) {
     const [apiError, setApiError] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -34,7 +33,9 @@ export function DeleteTransactionDialog({
         setIsSubmitting(true);
         try {
             await TransactionService.delete({ id: transactionId });
-            onTransactionDeleted(transactionId);
+            await useTransactionStore
+                .getState()
+                .removeTransaction(transactionId);
             onClose();
         } catch (err: unknown) {
             setApiError(extractErrorMessage(err));

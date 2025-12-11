@@ -9,7 +9,12 @@ export const createTransactionSchema = z.object({
         message: "Invalid transaction type",
     }),
     note: z.string().optional(),
-    occurredAt: z.string().optional(),
+    occurredAt: z
+        .string()
+        .min(1, { message: "Date is required" })
+        .refine((v) => !isNaN(new Date(v).getTime()), {
+            message: "Invalid date",
+        }),
 });
 
 export const deleteTransactionSchema = z.object({

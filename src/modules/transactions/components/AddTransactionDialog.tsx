@@ -1,51 +1,52 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+
 import {
     Dialog,
     DialogContent,
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog";
+
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
-import { useCategoryStore } from "@/modules/categories/store/category.store";
-import { CategoryService } from "@/modules/categories/services/category.service";
-import { TransactionService } from "../services/transaction.service";
-import { extractErrorMessage } from "@/lib/utils";
 import { FormError } from "@/components/ui/FormError";
+import { SelectField } from "@/components/ui/SelectField";
+
 import {
     CreateTransactionInput,
     createTransactionSchema,
-    Transaction,
 } from "../schemas/transaction.schemas";
-import { SelectField } from "@/components/ui/SelectField";
+
+import { extractErrorMessage } from "@/lib/utils";
+import { TransactionService } from "../services/transaction.service";
+
+import { useCategoryStore } from "@/modules/categories/store/category.store";
+import { useTransactionStore } from "../store/transaction.store";
 
 type Props = {
     open: boolean;
     onClose: () => void;
-    onTransactionCreated: (transaction: Transaction) => void;
 };
 
-export function AddTransactionDialog({
-    open,
-    onClose,
-    onTransactionCreated,
-}: Props) {
-    const { categories, setCategories } = useCategoryStore();
-    const [catError, setCatError] = useState<string | null>(null);
-    const [catLoading, setCatLoading] = useState(false);
+export function AddTransactionDialog({ open, onClose }: Props) {
+    const {
+        categories,
+        fetchAllCategories,
+        loading: catLoading,
+        error: catError,
+    } = useCategoryStore();
+
     const [apiError, setApiError] = useState<string | null>(null);
 
-    // Initialize form with Zod validation (Auth-style)
     const {
         register,
         handleSubmit,
         reset,
-        watch,
-        setValue,
+        control,
         formState: { errors, isSubmitting },
     } = useForm<CreateTransactionInput>({
         resolver: zodResolver(createTransactionSchema),
@@ -54,44 +55,49 @@ export function AddTransactionDialog({
             categoryId: undefined,
             kind: undefined,
             note: "",
-            occurredAt: "",
+            occurredAt: new Date().toISOString().split("T")[0],
         },
     });
 
-    const categoryValue = watch("categoryId");
-
-    // Fetch categories when dialog opens
     useEffect(() => {
         if (open && !categories.length) {
-            const loadCategories = async () => {
-                setCatLoading(true);
-                setCatError(null);
-                try {
-                    const data = await CategoryService.getAll();
-                    setCategories(data);
-                } catch (err: unknown) {
-                    setCatError(extractErrorMessage(err));
-                } finally {
-                    setCatLoading(false);
-                }
-            };
-            loadCategories();
+            fetchAllCategories();
         }
-    }, [open, categories.length, setCategories]);
+    }, [open, categories.length, fetchAllCategories]);
 
-    const onSubmit = async (data: CreateTransactionInput) => {
+    const onSubmit = async (formData: CreateTransactionInput) => {
         setApiError(null);
+
         try {
-            const newTxn = await TransactionService.create(data);
-            onTransactionCreated(newTxn);
+            const payload = {
+                ...formData,
+                occurredAt: new Date(formData.occurredAt).toISOString(),
+            };
+
+            const newTxn = await TransactionService.create(payload);
+
+            await useTransactionStore.getState().addTransaction(newTxn);
+
             reset();
             onClose();
         } catch (err: unknown) {
-            setApiError(extractErrorMessage(err));
+            const msg = extractErrorMessage(err);
+            setApiError(msg);
         }
     };
 
-    // Handle category loading or error
+    if (catLoading) {
+        return (
+            <Dialog open={open} onOpenChange={onClose}>
+                <DialogContent className="sm:max-w-md bg-neutral-900 border border-neutral-800 text-neutral-100">
+                    <p className="text-sm text-neutral-400">
+                        Loading categories...
+                    </p>
+                </DialogContent>
+            </Dialog>
+        );
+    }
+
     if (catError) {
         return (
             <Dialog open={open} onOpenChange={onClose}>
@@ -102,22 +108,10 @@ export function AddTransactionDialog({
                     <Button
                         variant="secondary"
                         className="mt-4"
-                        onClick={() => window.location.reload()}
+                        onClick={fetchAllCategories}
                     >
                         Retry
                     </Button>
-                </DialogContent>
-            </Dialog>
-        );
-    }
-
-    if (catLoading) {
-        return (
-            <Dialog open={open} onOpenChange={onClose}>
-                <DialogContent className="sm:max-w-md bg-neutral-900 border border-neutral-800 text-neutral-100">
-                    <p className="text-sm text-neutral-400">
-                        Loading categories...
-                    </p>
                 </DialogContent>
             </Dialog>
         );
@@ -139,7 +133,7 @@ export function AddTransactionDialog({
                 >
                     {/* Amount */}
                     <Input
-                        label="Amount (₹)"
+                        label="Amount ($)"
                         type="number"
                         step="0.01"
                         disabled={isSubmitting}
@@ -147,35 +141,46 @@ export function AddTransactionDialog({
                         error={errors.amount}
                     />
 
-                    {/* Category */}
-                    <SelectField
-                        label="Category"
-                        placeholder="Select category"
-                        error={errors.categoryId}
-                        value={categoryValue || undefined}
-                        onChange={(val) =>
-                            setValue("categoryId", Number(val), {
-                                shouldValidate: true,
-                            })
-                        }
-                        options={categories
-                            .filter((c) => !c.isArchived)
-                            .map((c) => ({ value: c.id, label: c.name }))}
+                    {/* Category (Controller fixes the warning) */}
+                    <Controller
+                        control={control}
+                        name="categoryId"
+                        render={({ field }) => (
+                            <SelectField
+                                label="Category"
+                                placeholder="Select category"
+                                error={errors.categoryId}
+                                value={field.value}
+                                onChange={(val) => field.onChange(Number(val))}
+                                options={categories
+                                    .filter((c) => !c.isArchived)
+                                    .map((c) => ({
+                                        value: c.id,
+                                        label: c.name,
+                                    }))}
+                            />
+                        )}
                     />
 
-                    {/* Kind */}
-                    <SelectField
-                        label="Type"
-                        placeholder="Select type"
-                        error={errors.kind}
-                        value={watch("kind")}
-                        onChange={(val) =>
-                            setValue("kind", val as "income" | "expense")
-                        }
-                        options={[
-                            { value: "income", label: "Income" },
-                            { value: "expense", label: "Expense" },
-                        ]}
+                    {/* Type */}
+                    <Controller
+                        control={control}
+                        name="kind"
+                        render={({ field }) => (
+                            <SelectField
+                                label="Type"
+                                placeholder="Select type"
+                                error={errors.kind}
+                                value={field.value}
+                                onChange={(val) =>
+                                    field.onChange(val as "income" | "expense")
+                                }
+                                options={[
+                                    { value: "income", label: "Income" },
+                                    { value: "expense", label: "Expense" },
+                                ]}
+                            />
+                        )}
                     />
 
                     {/* Note */}

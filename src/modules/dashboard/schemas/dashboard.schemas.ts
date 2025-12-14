@@ -4,6 +4,7 @@ export type DashboardSummary = {
     totalIncome: number;
     totalExpense: number;
     balance: number;
+    transactionCount: number;
 };
 
 export type DashboardTransaction = {

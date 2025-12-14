@@ -18,11 +18,19 @@ import { AiForecast } from "@/modules/ai/components/AiForcast";
 export function DashboardContent() {
     const router = useRouter();
     const { user, logout } = useAuthStore();
-    const { fetchAll, loading: dashboardLoading } = useDashboardStore();
+    const {
+        fetchAll,
+        loading: dashboardLoading,
+        summary,
+    } = useDashboardStore();
 
     useEffect(() => {
         fetchAll();
     }, [fetchAll]);
+
+    const transactionCount = summary?.transactionCount ?? 0;
+    const hasTransactions = transactionCount > 0;
+    const canUseAi = transactionCount >= 5;
 
     return (
         <div className="min-h-screen p-4 md:p-8">
@@ -69,11 +77,39 @@ export function DashboardContent() {
                 <>
                     <SummaryCards />
                     <RecentActivity />
-                    <AiSpendingSummary />
-                    <AiSavingRecommendations />
-                    <AiForecast />
-                    <ChartsSection />
-                    <TopCategories />
+
+                    {/* AI SECTION */}
+                    {canUseAi ? (
+                        <>
+                            <AiSpendingSummary />
+                            <AiSavingRecommendations />
+                            <AiForecast />
+                        </>
+                    ) : (
+                        <div className="bg-neutral-900 border border-neutral-800 rounded-xl p-6 mt-6">
+                            <h2 className="text-lg font-semibold text-neutral-100">
+                                AI Insights
+                            </h2>
+                            <p className="text-sm text-neutral-400 mt-2">
+                                Add at least{" "}
+                                <span className="text-neutral-200 font-medium">
+                                    5 transactions
+                                </span>{" "}
+                                to unlock AI-powered insights like spending
+                                summaries, savings recommendations, and
+                                forecasts.
+                            </p>
+                        </div>
+                    )}
+
+                    {/* CHARTS & CATEGORIES */}
+                    {hasTransactions && (
+                        <>
+                            <ChartsSection />
+                            <TopCategories />
+                        </>
+                    )}
+
                     <Categories />
                 </>
             )}

@@ -4,7 +4,9 @@ import { useDashboardStore } from "../store/dashboard.store";
 export function TopCategories() {
     const { topCategories } = useDashboardStore();
 
-    if (!topCategories?.length) return null;
+    if (!topCategories || topCategories.length === 0) {
+        return null;
+    }
 
     return (
         <div className="bg-neutral-900 border border-neutral-800 rounded-xl p-5 mt-6">

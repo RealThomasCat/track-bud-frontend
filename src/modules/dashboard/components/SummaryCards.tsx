@@ -27,7 +27,7 @@ export function SummaryCards() {
                     key={c.label}
                     className="bg-neutral-900 border border-neutral-800 rounded-xl p-4 shadow-md"
                 >
-                    <p className="text-sm text-neutral-400">{c.label}</p>
+                    <p className="text-sm text-neutral-400 mb-2">{c.label}</p>
                     {/* TODO: Apply user currency symbol */}
                     <p className={`text-2xl font-semibold ${c.color}`}>
                         ${c.value.toLocaleString()}

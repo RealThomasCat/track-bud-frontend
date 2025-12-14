@@ -109,7 +109,7 @@ export function TransactionsModal({ open, onClose }: Props) {
                             ))}
                         </ul>
                     ) : (
-                        <p className="text-neutral-400 text-sm">
+                        <p className="text-neutral-400 text-sm text-center">
                             No transactions found.
                         </p>
                     )}

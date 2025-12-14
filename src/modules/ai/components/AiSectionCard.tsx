@@ -20,7 +20,7 @@ export function AiSectionCard({
 }: AiSectionCardProps) {
     return (
         <div className="bg-neutral-900 border border-neutral-800 rounded-xl p-6 mt-6">
-            <div className="flex flex-col md:flex-row gap-4 md:gap-0 justify-between items-center">
+            <div className="flex flex-col md:flex-row gap-4 md:gap-0 justify-between md:items-center">
                 <div>
                     <h2 className="text-lg font-semibold text-neutral-100">
                         {title}

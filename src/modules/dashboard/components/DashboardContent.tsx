@@ -48,8 +48,11 @@ export function DashboardContent() {
                 </div>
 
                 <div className="flex flex-col">
-                    <h1 className="text-lg text-neutral-100 font-semibold capitalize">
-                        {user?.name?.split(" ")[0]}&apos;s Dashboard
+                    <h1 className="text-lg text-neutral-100 font-semibold">
+                        <span className="capitalize">
+                            {user?.name?.split(" ")[0]}
+                        </span>
+                        &apos;s Dashboard
                     </h1>
                 </div>
 

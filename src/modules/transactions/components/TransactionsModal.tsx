@@ -52,7 +52,7 @@ export function TransactionsModal({ open, onClose }: Props) {
 
     return (
         <Dialog open={open} onOpenChange={onClose}>
-            <DialogContent className="bg-neutral-900 border border-neutral-800 w-full h-full max-w-2xl! max-h-[80vh] overflow-hidden px-0!">
+            <DialogContent className="bg-neutral-900 border border-neutral-800 w-full h-full md:max-w-2xl! max-h-[80vh] overflow-hidden px-0!">
                 <DialogHeader className="px-4">
                     <DialogTitle className="text-lg font-semibold text-neutral-100">
                         All Transactions

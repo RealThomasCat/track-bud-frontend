@@ -46,13 +46,14 @@ export function Categories() {
 
     return (
         <div className="bg-neutral-900 border border-neutral-800 rounded-xl p-5 mt-6">
-            <div className="flex items-center justify-between mb-5">
+            <div className="flex flex-col md:flex-row md:items-center justify-between mb-5 gap-4 md:gap-0">
                 <h2 className="text-lg font-semibold text-neutral-100">
                     Your Categories
                 </h2>
+
                 <Button
                     onClick={() => setShowAddDialog(true)}
-                    className="max-w-40"
+                    className="md:max-w-40"
                 >
                     Add Category
                 </Button>

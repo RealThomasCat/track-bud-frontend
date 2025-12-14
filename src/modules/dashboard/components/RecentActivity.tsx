@@ -17,15 +17,15 @@ export function RecentActivity() {
     return (
         <div className="bg-neutral-900 border border-neutral-800 rounded-xl p-5 mt-6">
             {/* HEADER WITH BUTTONS */}
-            <div className="flex items-center justify-between mb-2">
+            <div className="flex flex-col md:flex-row md:items-center justify-between mb-2 gap-4 md:gap-0">
                 <h2 className="text-lg font-semibold text-neutral-100">
                     Recent Activity
                 </h2>
 
-                <div className="flex gap-3 max-w-80 w-full">
+                <div className="flex flex-col-reverse md:flex-row gap-3 md:max-w-80 w-full">
                     <Button
                         variant="secondary"
-                        className="max-w-40"
+                        className="md:max-w-40"
                         onClick={() => setShowAllModal(true)}
                     >
                         View All
@@ -33,7 +33,7 @@ export function RecentActivity() {
 
                     <Button
                         variant="primary"
-                        className="max-w-40"
+                        className="md:max-w-40"
                         onClick={() => setShowAddDialog(true)}
                     >
                         Add Transaction

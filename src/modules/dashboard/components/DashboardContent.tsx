@@ -33,7 +33,7 @@ export function DashboardContent() {
     const canUseAi = transactionCount >= 5;
 
     return (
-        <div className="min-h-screen p-4 md:p-8">
+        <div className="min-h-screen p-4 md:p-8 flex flex-col">
             <div className="flex flex-col mb-4">
                 <div className="flex justify-between items-center mb-8">
                     <div>
@@ -70,7 +70,7 @@ export function DashboardContent() {
             </div>
 
             {dashboardLoading ? (
-                <div className="flex justify-center items-center h-screen text-neutral-400">
+                <div className="flex grow justify-center items-center text-neutral-400">
                     Loading dashboard...
                 </div>
             ) : (

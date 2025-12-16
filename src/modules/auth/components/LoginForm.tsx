@@ -12,11 +12,13 @@ import { FormError } from "@/components/ui/FormError";
 import { useState } from "react";
 import Link from "next/link";
 import { AuthService } from "../services/auth.service";
+import { GUEST_CREDENTIALS } from "../constants/guest";
 
 export function LoginForm() {
     const router = useRouter();
     const { fetchUser } = useAuthStore();
     const [apiError, setApiError] = useState<string | null>(null);
+    const [guestLoading, setGuestLoading] = useState(false);
 
     const {
         register,
@@ -35,6 +37,22 @@ export function LoginForm() {
             router.replace("/dashboard");
         } catch (err) {
             setApiError(extractErrorMessage(err));
+        }
+    };
+
+    // Guest login
+    const handleGuestLogin = async () => {
+        setApiError(null);
+        setGuestLoading(true);
+
+        try {
+            await AuthService.login(GUEST_CREDENTIALS);
+            await fetchUser();
+            router.replace("/dashboard");
+        } catch (err) {
+            setApiError(extractErrorMessage(err));
+        } finally {
+            setGuestLoading(false);
         }
     };
 
@@ -70,6 +88,16 @@ export function LoginForm() {
                     disabled={isSubmitting}
                 >
                     Login
+                </Button>
+
+                <Button
+                    type="button"
+                    variant="primary"
+                    onClick={handleGuestLogin}
+                    loading={guestLoading}
+                    disabled={guestLoading || isSubmitting}
+                >
+                    Guest
                 </Button>
 
                 <FormError message={apiError ?? undefined} />

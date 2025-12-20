@@ -8,12 +8,12 @@ export default function Home() {
             <div className="flex flex-col md:flex-row justify-between items-center w-full max-w-6xl py-20">
                 {/* Left: Hero Content */}
                 <div className="flex flex-col w-full md:w-1/2 gap-8">
-                    <h1 className="text-4xl md:text-[4rem] font-bold text-neutral-100 leading-tighter uppercase">
-                        Powerful
+                    <h1 className="text-4xl md:text-[3.5rem] lg:text-[4.5rem] font-bold text-neutral-100 leading-tighter uppercase lg:leading-18">
+                        Track
                         <br />
-                        <span className="text-neutral-100">Insights For</span>
+                        <span className="text-neutral-100">Your Money</span>
                         <br />
-                        Your Finances
+                        Smarter
                     </h1>
 
                     {/* Keywords Row */}
@@ -36,7 +36,7 @@ export default function Home() {
                     <Image
                         src={heroImage}
                         alt="TrackBud Hero"
-                        className="h-100 w-auto object-contain"
+                        className="h-88 w-auto object-contain"
                     />
                 </div>
             </div>

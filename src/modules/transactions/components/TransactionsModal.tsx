@@ -61,7 +61,9 @@ export function TransactionsModal({ open, onClose }: Props) {
 
                 <div className="overflow-y-scroll max-h-full px-4 mt-2 scrollbar-hide">
                     {loading ? (
-                        <p className="text-neutral-400 text-sm">Loading...</p>
+                        <p className="text-neutral-400 text-sm text-center">
+                            Loading...
+                        </p>
                     ) : error ? (
                         <p className="text-rose-500 text-sm">{error}</p>
                     ) : transactions.length ? (

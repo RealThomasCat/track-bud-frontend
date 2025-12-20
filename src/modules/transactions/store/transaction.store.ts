@@ -4,6 +4,7 @@ import { create } from "zustand";
 import { Transaction } from "../schemas/transaction.schemas";
 import { TransactionService } from "../services/transaction.service";
 import { useDashboardStore } from "@/modules/dashboard/store/dashboard.store";
+import { mapTransactionToDashboard } from "@/modules/dashboard/utils/mapTransactionToDashboard";
 
 type TransactionState = {
     transactions: Transaction[];
@@ -41,7 +42,15 @@ export const useTransactionStore = create<TransactionState>((set) => ({
     // Add a new transaction and sync dashboard store
     addTransaction: async (txn) => {
         set((s) => ({ transactions: [txn, ...s.transactions] }));
-        await useDashboardStore.getState().fetchAll(); // keep dashboard in sync
+
+        // Map to DashboardTransaction
+        const dashboardTxn = mapTransactionToDashboard(txn);
+
+        // Optimistic dashboard update
+        useDashboardStore.getState().applyTransactionOptimistic(dashboardTxn);
+
+        // Background reconcile (non-blocking)
+        useDashboardStore.getState().fetchAll(); // keep dashboard in sync
     },
 
     // Remove a transaction by ID and sync dashboard store

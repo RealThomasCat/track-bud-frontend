@@ -21,6 +21,7 @@ export function DashboardContent() {
     const {
         fetchAll,
         loading: dashboardLoading,
+        hasLoaded: dashboardHasLoaded,
         summary,
     } = useDashboardStore();
 
@@ -63,15 +64,13 @@ export function DashboardContent() {
                         &apos;s Dashboard
                     </h1>
                 </div>
-
-                {/* <h1 className="text-lg font-semibold text-neutral-100">
-                    Welcome to your dashboard, {user?.name}!
-                </h1> */}
             </div>
 
-            {dashboardLoading ? (
+            {/* Show dashboard loading only on first load */}
+            {dashboardLoading && !dashboardHasLoaded ? (
                 <div className="flex grow justify-center items-center text-neutral-400">
-                    Loading dashboard...
+                    {" "}
+                    Loading dashboard...{" "}
                 </div>
             ) : (
                 <>

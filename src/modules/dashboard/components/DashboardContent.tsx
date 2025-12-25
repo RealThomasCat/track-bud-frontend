@@ -20,7 +20,6 @@ export function DashboardContent() {
     const { user, logout } = useAuthStore();
     const {
         fetchAll,
-        loading: dashboardLoading,
         hasLoaded: dashboardHasLoaded,
         summary,
     } = useDashboardStore();
@@ -29,9 +28,10 @@ export function DashboardContent() {
         fetchAll();
     }, [fetchAll]);
 
-    const transactionCount = summary?.transactionCount ?? 0;
-    const hasTransactions = transactionCount > 0;
-    const canUseAi = transactionCount >= 5;
+    const isReady = dashboardHasLoaded;
+    const transactionCount = isReady ? summary!.transactionCount : 0;
+    const hasTransactions = isReady && transactionCount > 0;
+    const canUseAi = isReady && transactionCount >= 5;
 
     return (
         <div className="min-h-screen p-4 md:p-8 flex flex-col">
@@ -67,7 +67,7 @@ export function DashboardContent() {
             </div>
 
             {/* Show dashboard loading only on first load */}
-            {dashboardLoading && !dashboardHasLoaded ? (
+            {!dashboardHasLoaded ? (
                 <div className="flex grow justify-center items-center text-neutral-400">
                     {" "}
                     Loading dashboard...{" "}

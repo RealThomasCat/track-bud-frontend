@@ -1,30 +1,16 @@
 @import url("https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap");
-/* @import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"); */
-
 @import "tailwindcss";
 
-@theme {
-    --color-bg-black: #121212;
-}
-
-/* GLOBAL THEME VARIABLES */
+/* Dark-only color scheme */
 :root {
-    /* Light mode theme */
-    --bg-root: #f9fafb;
-    --text-root: #111827;
+    --color-bg-black: #121212;
+    --bg-root: #121212;
+    --text-root: #ffffff;
+
+    color-scheme: dark;
 }
 
-@media (prefers-color-scheme: dark) {
-    :root {
-        /* Dark mode theme (default) */
-        --bg-root: var(--color-bg-black);
-        --text-root: #ffffff;
-    }
-}
-
-/* GLOBAL RESET */
+/* Global reset */
 html,
 body {
     height: 100%;
@@ -35,30 +21,26 @@ body {
     color: var(--text-root);
 
     font-family: "Lexend", sans-serif;
-    /* font-family: "Open Sans", sans-serif; */
-    /* font-family: "Inter", sans-serif; */
-    /* font-family: "Roboto", sans-serif; */
     font-optical-sizing: auto;
 }
 
-/* SCROLLBAR HIDE UTILITY */
+/* Scrollbar hide */
 .scrollbar-hide::-webkit-scrollbar {
     display: none;
 }
-
 .scrollbar-hide {
     -ms-overflow-style: none;
     scrollbar-width: none;
 }
 
-/* REMOVE NUMBER INPUT ARROWS (Chrome, Edge, Safari) */
+/* Number input arrows removal */
 input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
 
-/* MAKE THE DATE PICKER ICON WHITE */
+/* Date picker icon */
 input[type="date"]::-webkit-calendar-picker-indicator {
     filter: invert(1);
 }

@@ -12,6 +12,7 @@ export type DashboardTransaction = {
     amount: number;
     kind: "income" | "expense";
     category: string;
+    wallet: string;
     occurredAt: string;
     note?: string | null;
 };

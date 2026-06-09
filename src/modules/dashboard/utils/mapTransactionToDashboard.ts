@@ -2,12 +2,9 @@ import type { Transaction } from "@/modules/transactions/schemas/transaction.sch
 import type { DashboardTransaction } from "../schemas/dashboard.schemas";
 import { useCategoryStore } from "@/modules/categories/store/category.store";
 
-/**
- * Converts a backend Transaction into a DashboardTransaction
- * for optimistic UI updates.
- */
+// Converts a backend Transaction into a DashboardTransaction for optimistic UI updates.
 export function mapTransactionToDashboard(
-    txn: Transaction
+    txn: Transaction,
 ): DashboardTransaction {
     const categories = useCategoryStore.getState().categories;
     const category = categories.find((c) => c.id === txn.categoryId);
@@ -17,6 +14,7 @@ export function mapTransactionToDashboard(
         amount: Number(txn.amount),
         kind: txn.kind,
         category: category?.name ?? "Unknown",
+        wallet: "Default Wallet",
         occurredAt: txn.occurredAt,
         note: txn.note ?? null,
     };

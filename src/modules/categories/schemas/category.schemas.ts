@@ -3,6 +3,7 @@ import { z } from "zod";
 // Category type definition
 export type Category = {
     id: number;
+    userId: number;
     name: string;
     isDefault: boolean;
     isArchived: boolean;

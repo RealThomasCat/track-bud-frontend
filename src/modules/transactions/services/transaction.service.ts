@@ -4,21 +4,23 @@ import {
     CreateTransactionInput,
     DeleteTransactionInput,
     Transaction,
+    TransactionListResponse,
 } from "../schemas/transaction.schemas";
 
 export const TransactionService = {
     // GET ALL TRANSACTIONS
     async getAll(): Promise<Transaction[]> {
-        const res = await api.get<ApiResponse<{ transactions: Transaction[] }>>(
-            "/transactions"
-        );
+        const res =
+            await api.get<ApiResponse<TransactionListResponse>>(
+                "/transactions",
+            );
         return res.data.transactions;
     },
 
     // GET TRANSACTION BY ID
     async getById(id: number): Promise<Transaction> {
         const res = await api.get<ApiResponse<{ transaction: Transaction }>>(
-            `/transactions/${id}`
+            `/transactions/${id}`,
         );
         return res.data.transaction;
     },
@@ -27,13 +29,15 @@ export const TransactionService = {
     async create(data: CreateTransactionInput): Promise<Transaction> {
         const res = await api.post<ApiResponse<{ transaction: Transaction }>>(
             "/transactions",
-            data
+            data,
         );
         return res.data.transaction;
     },
 
     // DELETE TRANSACTION
     async delete(data: DeleteTransactionInput): Promise<void> {
-        await api.delete<ApiResponse<null>>(`/transactions/${data.id}`);
+        await api.delete<ApiResponse<Record<string, never>>>(
+            `/transactions/${data.id}`,
+        );
     },
 };

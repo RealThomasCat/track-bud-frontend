@@ -5,6 +5,7 @@ export type SpendingSummaryData = {
 };
 
 export type SavingRecommendationsData = {
+    summary: string;
     tips: string[];
 };
 
@@ -15,6 +16,7 @@ export type ForecastData = {
 
 // Generic shape returned by backend
 export type AiResponse<T> = {
-    rawText: string;
+    type: string;
+    rawText?: string;
     data: T | null;
 };

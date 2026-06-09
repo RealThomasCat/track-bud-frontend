@@ -1,4 +1,4 @@
-const DEFAULT_API_ORIGIN = "http://localhost:5000";
+const DEFAULT_API_BASE_URL = "/api/v1";
 const API_PREFIX = "/api/v1";
 
 function trimTrailingSlash(value: string) {
@@ -8,9 +8,11 @@ function trimTrailingSlash(value: string) {
 export function getVersionedApiBaseUrl(
     apiOrigin = process.env.NEXT_PUBLIC_API_URL
 ) {
-    const normalizedOrigin = trimTrailingSlash(
-        apiOrigin || DEFAULT_API_ORIGIN
-    );
+    if (!apiOrigin) {
+        return DEFAULT_API_BASE_URL;
+    }
+
+    const normalizedOrigin = trimTrailingSlash(apiOrigin);
 
     if (normalizedOrigin.endsWith(API_PREFIX)) {
         return normalizedOrigin;

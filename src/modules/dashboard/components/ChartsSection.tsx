@@ -184,7 +184,7 @@ export function ChartsSection() {
                     >
                         <ResponsiveContainer
                             width="100%"
-                            className="h-70! md:h-100!"
+                            className="chart-surface h-70! md:h-100!"
                         >
                             <BarChart data={byMonth}>
                                 <XAxis
@@ -249,6 +249,7 @@ export function ChartsSection() {
                 </h2>
 
                 <PieChart
+                    className="chart-surface"
                     style={{
                         width: "100%",
                         maxWidth: "400px",

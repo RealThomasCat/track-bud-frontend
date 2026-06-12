@@ -44,3 +44,18 @@ input[type="number"]::-webkit-inner-spin-button {
 input[type="date"]::-webkit-calendar-picker-indicator {
     filter: invert(1);
 }
+
+/* Hide unwanted focus/tap outlines on Recharts-generated chart elements. */
+.chart-surface,
+.chart-surface * {
+    -webkit-tap-highlight-color: transparent;
+}
+
+.chart-surface:focus,
+.chart-surface *:focus,
+.chart-surface .recharts-wrapper:focus,
+.chart-surface .recharts-surface:focus,
+.chart-surface .recharts-rectangle:focus,
+.chart-surface .recharts-sector:focus {
+    outline: none !important;
+}

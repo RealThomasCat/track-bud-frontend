@@ -13,6 +13,7 @@ type CategoryState = {
     fetchAllCategories: () => Promise<void>;
     addCategory: (data: CreateCategoryInput) => Promise<void>;
     removeCategory: (id: number) => Promise<void>;
+    reset: () => void;
 };
 
 export const useCategoryStore = create<CategoryState>((set) => ({
@@ -60,4 +61,11 @@ export const useCategoryStore = create<CategoryState>((set) => ({
             throw err;
         }
     },
+
+    reset: () =>
+        set({
+            categories: [],
+            loading: false,
+            error: null,
+        }),
 }));

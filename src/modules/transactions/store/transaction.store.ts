@@ -14,6 +14,7 @@ type TransactionState = {
     fetchAllTransactions: () => Promise<void>;
     addTransaction: (txn: Transaction) => Promise<void>;
     removeTransaction: (id: number) => Promise<void>;
+    reset: () => void;
 };
 
 export const useTransactionStore = create<TransactionState>((set) => ({
@@ -47,4 +48,11 @@ export const useTransactionStore = create<TransactionState>((set) => ({
         }));
         await useDashboardStore.getState().fetchAll();
     },
+
+    reset: () =>
+        set({
+            transactions: [],
+            loading: false,
+            error: null,
+        }),
 }));

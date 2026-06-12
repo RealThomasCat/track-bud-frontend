@@ -18,6 +18,7 @@ type DashboardState = {
     hasLoaded: boolean;
     error: string | null;
     fetchAll: () => Promise<void>;
+    reset: () => void;
 };
 
 export const useDashboardStore = create<DashboardState>((set) => ({
@@ -50,4 +51,15 @@ export const useDashboardStore = create<DashboardState>((set) => ({
             set({ loading: false });
         }
     },
+
+    reset: () =>
+        set({
+            summary: null,
+            recentActivity: [],
+            topCategories: [],
+            charts: null,
+            loading: false,
+            hasLoaded: false,
+            error: null,
+        }),
 }));

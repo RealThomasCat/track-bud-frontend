@@ -12,6 +12,7 @@ export function Button({
     loading = false,
     className,
     children,
+    disabled,
     ...props
 }: ButtonProps) {
     const baseStyles =
@@ -27,9 +28,9 @@ export function Button({
 
     return (
         <button
-            className={cn(baseStyles, variants[variant], className)}
-            disabled={loading || props.disabled}
             {...props}
+            className={cn(baseStyles, variants[variant], className)}
+            disabled={loading || disabled}
         >
             {loading ? "Loading..." : children}
         </button>

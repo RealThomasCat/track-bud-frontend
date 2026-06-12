@@ -34,7 +34,7 @@ export function DeleteTransactionDialog({
         setApiError(null);
         setIsSubmitting(true);
         try {
-            await TransactionService.delete({ id: transactionId });
+            await TransactionService.delete(transactionId);
             await useTransactionStore
                 .getState()
                 .removeTransaction(transactionId);

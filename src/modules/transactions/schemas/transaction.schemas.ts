@@ -17,12 +17,7 @@ export const createTransactionSchema = z.object({
         }),
 });
 
-export const deleteTransactionSchema = z.object({
-    id: z.number(),
-});
-
 export type CreateTransactionInput = z.infer<typeof createTransactionSchema>;
-export type DeleteTransactionInput = z.infer<typeof deleteTransactionSchema>;
 
 export type TransactionPagination = {
     limit: number;

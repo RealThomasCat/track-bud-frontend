@@ -2,7 +2,6 @@ import { api } from "@/lib/axios";
 import { ApiResponse } from "@/types/apiResponse";
 import {
     CreateTransactionInput,
-    DeleteTransactionInput,
     Transaction,
     TransactionListResponse,
 } from "../schemas/transaction.schemas";
@@ -35,9 +34,9 @@ export const TransactionService = {
     },
 
     // DELETE TRANSACTION
-    async delete(data: DeleteTransactionInput): Promise<void> {
+    async delete(id: number): Promise<void> {
         await api.delete<ApiResponse<Record<string, never>>>(
-            `/transactions/${data.id}`,
+            `/transactions/${id}`,
         );
     },
 };

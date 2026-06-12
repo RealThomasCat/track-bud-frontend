@@ -4,6 +4,7 @@ import { create } from "zustand";
 import { Transaction } from "../schemas/transaction.schemas";
 import { TransactionService } from "../services/transaction.service";
 import { useDashboardStore } from "@/modules/dashboard/store/dashboard.store";
+import { extractErrorMessage } from "@/lib/utils";
 
 type TransactionState = {
     transactions: Transaction[];
@@ -27,12 +28,7 @@ export const useTransactionStore = create<TransactionState>((set) => ({
             const data = await TransactionService.getAll();
             set({ transactions: data });
         } catch (err: unknown) {
-            set({
-                error:
-                    err instanceof Error
-                        ? err.message
-                        : "Error fetching transactions",
-            });
+            set({ error: extractErrorMessage(err) });
         } finally {
             set({ loading: false });
         }

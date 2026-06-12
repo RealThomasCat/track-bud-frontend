@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { AiSectionCard } from "./AiSectionCard";
-import { AiResponse, SavingRecommendationsData } from "../schema/ai.schemas";
+import { AiResponse, SavingRecommendationsData } from "../schemas/ai.schemas";
 import { AiService } from "../services/ai.service";
 import { SavingRecommendationsRenderer } from "./SavingRecommendationsRenderer";
 import { extractErrorMessage } from "@/lib/utils";

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { AiSectionCard } from "./AiSectionCard";
-import { AiResponse, SpendingSummaryData } from "../schema/ai.schemas";
+import { AiResponse, SpendingSummaryData } from "../schemas/ai.schemas";
 import { AiService } from "../services/ai.service";
 import { SpendingSummaryRenderer } from "./SpendingSummaryRenderer";
 import { extractErrorMessage } from "@/lib/utils";

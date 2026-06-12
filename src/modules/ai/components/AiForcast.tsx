@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { AiSectionCard } from "./AiSectionCard";
-import { AiResponse, ForecastData } from "../schema/ai.schemas";
+import { AiResponse, ForecastData } from "../schemas/ai.schemas";
 import { AiService } from "../services/ai.service";
 import { ForecastRenderer } from "./ForecastRenderer";
 import { extractErrorMessage } from "@/lib/utils";

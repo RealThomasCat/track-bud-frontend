@@ -1,6 +1,6 @@
 "use client";
 
-import { SpendingSummaryData } from "../schema/ai.schemas";
+import { SpendingSummaryData } from "../schemas/ai.schemas";
 
 export function SpendingSummaryRenderer({
     data,

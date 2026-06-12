@@ -1,6 +1,6 @@
 "use client";
 
-import { ForecastData } from "../schema/ai.schemas";
+import { ForecastData } from "../schemas/ai.schemas";
 
 export function ForecastRenderer({ data }: { data: ForecastData }) {
     return (

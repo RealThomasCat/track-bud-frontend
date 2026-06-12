@@ -7,7 +7,7 @@ import {
     MonthlyReviewCurrentData,
     SavingRecommendationsData,
     SpendingSummaryData,
-} from "../schema/ai.schemas";
+} from "../schemas/ai.schemas";
 
 export const AiService = {
     async getSpendingSummary(): Promise<AiResponse<SpendingSummaryData>> {

@@ -1,6 +1,6 @@
 "use client";
 
-import { SavingRecommendationsData } from "../schema/ai.schemas";
+import { SavingRecommendationsData } from "../schemas/ai.schemas";
 
 export function SavingRecommendationsRenderer({
     data,

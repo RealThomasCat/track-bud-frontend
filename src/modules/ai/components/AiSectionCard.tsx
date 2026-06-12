@@ -2,12 +2,14 @@
 
 import { ReactNode } from "react";
 import { Button } from "@/components/ui/Button";
+import { FormError } from "@/components/ui/FormError";
 
 type AiSectionCardProps = {
     title: string;
     description: string;
     loading: boolean;
     onGenerate: () => void;
+    error?: string | null;
     children?: ReactNode;
 };
 
@@ -16,6 +18,7 @@ export function AiSectionCard({
     description,
     loading,
     onGenerate,
+    error,
     children,
 }: AiSectionCardProps) {
     return (
@@ -32,12 +35,14 @@ export function AiSectionCard({
                     variant="primary"
                     className="md:max-w-40"
                     disabled={loading}
+                    loading={loading}
                     onClick={onGenerate}
                 >
-                    {loading ? "Generating..." : "Generate"}
+                    Generate
                 </Button>
             </div>
 
+            <FormError message={error ?? undefined} className="mt-4" />
             {children && <div className="mt-4">{children}</div>}
         </div>
     );

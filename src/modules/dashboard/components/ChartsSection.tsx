@@ -11,6 +11,8 @@ import {
     Cell,
 } from "recharts";
 import { useMemo } from "react";
+import { formatCurrency } from "@/lib/formatters";
+import { useAuthStore } from "@/modules/auth/store/auth.store";
 
 const COLORS = ["#22c55e", "#e11d48", "#facc15", "#38bdf8", "#a78bfa"];
 
@@ -38,6 +40,7 @@ export const CustomLegend = ({ items }: { items: LegendItem[] }) => {
 
 export function ChartsSection() {
     const { charts } = useDashboardStore();
+    const currency = useAuthStore((state) => state.user?.defaultCurrency);
 
     const { byCategory, byMonth } = useMemo(() => {
         if (!charts) return { byCategory: [], byMonth: [] };
@@ -104,7 +107,9 @@ export function ChartsSection() {
                                 <YAxis
                                     stroke="#888"
                                     tickFormatter={(value) =>
-                                        `$${value.toLocaleString()}`
+                                        formatCurrency(value, currency, {
+                                            notation: "compact",
+                                        })
                                     }
                                     style={{ fontSize: "0.85rem" }}
                                 />

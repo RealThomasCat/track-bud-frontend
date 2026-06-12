@@ -5,9 +5,12 @@ import { useDashboardStore } from "../store/dashboard.store";
 import { Button } from "@/components/ui/Button";
 import { AddTransactionDialog } from "@/modules/transactions/components/AddTransactionDialog";
 import { TransactionsModal } from "@/modules/transactions/components/TransactionsModal";
+import { formatDate, formatSignedCurrency } from "@/lib/formatters";
+import { useAuthStore } from "@/modules/auth/store/auth.store";
 
 export function RecentActivity() {
     const { recentActivity } = useDashboardStore();
+    const currency = useAuthStore((state) => state.user?.defaultCurrency);
 
     const [showAddDialog, setShowAddDialog] = useState(false);
     const [showAllModal, setShowAllModal] = useState(false);
@@ -65,13 +68,14 @@ export function RecentActivity() {
                                             : "text-rose-400 font-semibold"
                                     }
                                 >
-                                    {txn.kind === "income" ? "+" : "-"}$
-                                    {txn.amount}
+                                    {formatSignedCurrency(
+                                        txn.amount,
+                                        txn.kind,
+                                        currency
+                                    )}
                                 </p>
                                 <p className="text-neutral-500 text-xs mt-0.5">
-                                    {new Date(
-                                        txn.occurredAt
-                                    ).toLocaleDateString()}
+                                    {formatDate(txn.occurredAt)}
                                 </p>
                             </div>
                         </li>

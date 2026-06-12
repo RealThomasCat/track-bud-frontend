@@ -13,6 +13,8 @@ import { useTransactionStore } from "../store/transaction.store";
 import { DeleteTransactionDialog } from "./DeleteTransactionDialog";
 import { extractErrorMessage } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
+import { formatDate, formatSignedCurrency } from "@/lib/formatters";
+import { useAuthStore } from "@/modules/auth/store/auth.store";
 
 type Props = {
     open: boolean;
@@ -20,6 +22,7 @@ type Props = {
 };
 
 export function TransactionsModal({ open, onClose }: Props) {
+    const currency = useAuthStore((state) => state.user?.defaultCurrency);
     const {
         categories,
         fetchAllCategories,
@@ -125,14 +128,15 @@ export function TransactionsModal({ open, onClose }: Props) {
                                                     : "text-rose-400 font-semibold"
                                             }
                                         >
-                                            {txn.kind === "income" ? "+" : "-"}$
-                                            {txn.amount}
+                                            {formatSignedCurrency(
+                                                txn.amount,
+                                                txn.kind,
+                                                currency
+                                            )}
                                         </span>
 
                                         <span className="text-neutral-500 text-xs">
-                                            {new Date(
-                                                txn.occurredAt,
-                                            ).toLocaleDateString()}
+                                            {formatDate(txn.occurredAt)}
                                         </span>
 
                                         <button

@@ -1,8 +1,11 @@
 "use client";
+import { formatCurrency } from "@/lib/formatters";
+import { useAuthStore } from "@/modules/auth/store/auth.store";
 import { useDashboardStore } from "../store/dashboard.store";
 
 export function TopCategories() {
     const { topCategories } = useDashboardStore();
+    const currency = useAuthStore((state) => state.user?.defaultCurrency);
 
     if (!topCategories || topCategories.length === 0) {
         return null;
@@ -20,8 +23,9 @@ export function TopCategories() {
                         className="flex justify-between text-neutral-300 text-sm border-b border-neutral-800 pb-3 pt-0.5"
                     >
                         <span>{c.category}</span>
-                        {/* TODO: Apply user currency symbol */}
-                        <span className="text-neutral-400">${c.total}</span>
+                        <span className="text-neutral-400">
+                            {formatCurrency(c.total, currency)}
+                        </span>
                     </li>
                 ))}
             </ul>

@@ -1,8 +1,11 @@
 "use client";
+import { formatCurrency } from "@/lib/formatters";
+import { useAuthStore } from "@/modules/auth/store/auth.store";
 import { useDashboardStore } from "../store/dashboard.store";
 
 export function SummaryCards() {
     const { summary } = useDashboardStore();
+    const currency = useAuthStore((state) => state.user?.defaultCurrency);
 
     if (!summary) return null;
 
@@ -28,9 +31,8 @@ export function SummaryCards() {
                     className="bg-neutral-900 border border-neutral-800 rounded-xl p-4 shadow-md"
                 >
                     <p className="text-sm text-neutral-400 mb-2">{c.label}</p>
-                    {/* TODO: Apply user currency symbol */}
                     <p className={`text-2xl font-semibold ${c.color}`}>
-                        ${c.value.toLocaleString()}
+                        {formatCurrency(c.value, currency)}
                     </p>
                 </div>
             ))}

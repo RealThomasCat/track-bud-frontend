@@ -26,6 +26,7 @@ import { TransactionService } from "../services/transaction.service";
 
 import { useCategoryStore } from "@/modules/categories/store/category.store";
 import { useTransactionStore } from "../store/transaction.store";
+import { useAuthStore } from "@/modules/auth/store/auth.store";
 
 type Props = {
     open: boolean;
@@ -33,6 +34,9 @@ type Props = {
 };
 
 export function AddTransactionDialog({ open, onClose }: Props) {
+    const currency = useAuthStore(
+        (state) => state.user?.defaultCurrency ?? "USD"
+    );
     const {
         categories,
         fetchAllCategories,
@@ -135,7 +139,7 @@ export function AddTransactionDialog({ open, onClose }: Props) {
                 >
                     {/* Amount */}
                     <Input
-                        label="Amount ($)"
+                        label={`Amount (${currency})`}
                         type="number"
                         step="0.01"
                         disabled={isSubmitting}

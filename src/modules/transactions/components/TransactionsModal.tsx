@@ -12,6 +12,7 @@ import { useCategoryStore } from "@/modules/categories/store/category.store";
 import { useTransactionStore } from "../store/transaction.store";
 import { DeleteTransactionDialog } from "./DeleteTransactionDialog";
 import { extractErrorMessage } from "@/lib/utils";
+import { Button } from "@/components/ui/Button";
 
 type Props = {
     open: boolean;
@@ -19,8 +20,16 @@ type Props = {
 };
 
 export function TransactionsModal({ open, onClose }: Props) {
-    const { categories, fetchAllCategories } = useCategoryStore();
-    const { transactions, fetchAllTransactions } = useTransactionStore();
+    const {
+        categories,
+        fetchAllCategories,
+        error: categoryError,
+    } = useCategoryStore();
+    const {
+        transactions,
+        fetchAllTransactions,
+        error: transactionError,
+    } = useTransactionStore();
 
     const [deleteId, setDeleteId] = useState<number | null>(null);
     const [loading, setLoading] = useState(false);
@@ -52,20 +61,46 @@ export function TransactionsModal({ open, onClose }: Props) {
 
     return (
         <Dialog open={open} onOpenChange={onClose}>
-            <DialogContent className="bg-neutral-900 border border-neutral-800 w-full h-full md:max-w-2xl! max-h-[80vh] overflow-hidden px-0!">
+            <DialogContent className="bg-neutral-900 border border-neutral-800 w-full h-fit md:max-w-2xl! max-h-[80vh] overflow-hidden px-0! pt-4 pb-2 gap-4">
                 <DialogHeader className="px-4">
                     <DialogTitle className="text-lg font-semibold text-neutral-100">
                         All Transactions
                     </DialogTitle>
                 </DialogHeader>
 
-                <div className="overflow-y-scroll max-h-full px-4 mt-2 scrollbar-hide">
+                <div className="overflow-y-scroll max-h-full px-4 scrollbar-hide">
                     {loading ? (
                         <p className="text-neutral-400 text-sm text-center">
                             Loading...
                         </p>
-                    ) : error ? (
-                        <p className="text-rose-500 text-sm">{error}</p>
+                    ) : error || transactionError || categoryError ? (
+                        <div className="flex flex-col gap-3">
+                            <p className="text-rose-500 text-sm">
+                                {error ?? transactionError ?? categoryError}
+                            </p>
+                            <Button
+                                variant="secondary"
+                                className="max-w-28"
+                                onClick={async () => {
+                                    setLoading(true);
+                                    setError(null);
+                                    try {
+                                        await fetchAllTransactions();
+                                        if (!categories.length) {
+                                            await fetchAllCategories();
+                                        }
+                                    } catch (err: unknown) {
+                                        setError(extractErrorMessage(err));
+                                    } finally {
+                                        setLoading(false);
+                                    }
+                                }}
+                                disabled={loading}
+                                loading={loading}
+                            >
+                                Retry
+                            </Button>
+                        </div>
                     ) : transactions.length ? (
                         <ul className="divide-y divide-neutral-800">
                             {transactions.map((txn) => (
@@ -96,7 +131,7 @@ export function TransactionsModal({ open, onClose }: Props) {
 
                                         <span className="text-neutral-500 text-xs">
                                             {new Date(
-                                                txn.occurredAt
+                                                txn.occurredAt,
                                             ).toLocaleDateString()}
                                         </span>
 

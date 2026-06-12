@@ -29,6 +29,8 @@ export function DeleteTransactionDialog({
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleDelete = async () => {
+        if (isSubmitting) return;
+
         setApiError(null);
         setIsSubmitting(true);
         try {

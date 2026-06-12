@@ -109,6 +109,8 @@ export function AddTransactionDialog({ open, onClose }: Props) {
                         variant="secondary"
                         className="mt-4"
                         onClick={fetchAllCategories}
+                        disabled={catLoading}
+                        loading={catLoading}
                     >
                         Retry
                     </Button>

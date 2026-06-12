@@ -3,6 +3,8 @@ import { ApiResponse } from "@/types/apiResponse";
 import {
     AiResponse,
     ForecastData,
+    MonthlyReview,
+    MonthlyReviewCurrentData,
     SavingRecommendationsData,
     SpendingSummaryData,
 } from "../schema/ai.schemas";
@@ -27,6 +29,30 @@ export const AiService = {
     async getForecast(): Promise<AiResponse<ForecastData>> {
         const res = await api.get<ApiResponse<AiResponse<ForecastData>>>(
             "/ai/forecast"
+        );
+        return res.data;
+    },
+
+    async generateMonthlyReview(): Promise<AiResponse<MonthlyReview>> {
+        const res = await api.post<ApiResponse<AiResponse<MonthlyReview>>>(
+            "/ai/monthly-review",
+            {}
+        );
+        return res.data;
+    },
+
+    async getCurrentMonthlyReview(): Promise<
+        AiResponse<MonthlyReviewCurrentData>
+    > {
+        const res = await api.get<
+            ApiResponse<AiResponse<MonthlyReviewCurrentData>>
+        >("/ai/monthly-review/current");
+        return res.data;
+    },
+
+    async getMonthlyReviewById(id: number): Promise<AiResponse<MonthlyReview>> {
+        const res = await api.get<ApiResponse<AiResponse<MonthlyReview>>>(
+            `/ai/monthly-review/${id}`
         );
         return res.data;
     },

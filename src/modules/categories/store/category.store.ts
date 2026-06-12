@@ -51,7 +51,7 @@ export const useCategoryStore = create<CategoryState>((set) => ({
     // Archive/Delete category
     removeCategory: async (id) => {
         try {
-            await CategoryService.delete({ id });
+            await CategoryService.delete(id);
 
             // remove locally
             set((state) => ({

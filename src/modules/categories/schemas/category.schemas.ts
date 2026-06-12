@@ -20,11 +20,5 @@ export const createCategorySchema = z.object({
         .max(50, { message: "Category name must be less than 50 characters" }),
 });
 
-// Schema for deleting a category.
-export const deleteCategorySchema = z.object({
-    id: z.number(),
-});
-
 // Types inferred from schemas
 export type CreateCategoryInput = z.infer<typeof createCategorySchema>;
-export type DeleteCategoryInput = z.infer<typeof deleteCategorySchema>;

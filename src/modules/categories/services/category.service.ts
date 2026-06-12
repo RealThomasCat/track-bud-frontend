@@ -1,10 +1,6 @@
 import { api } from "@/lib/axios";
 import { ApiResponse } from "@/types/apiResponse";
-import {
-    Category,
-    CreateCategoryInput,
-    DeleteCategoryInput,
-} from "../schemas/category.schemas";
+import { Category, CreateCategoryInput } from "../schemas/category.schemas";
 
 export const CategoryService = {
     // Fetch all categories
@@ -25,9 +21,9 @@ export const CategoryService = {
     },
 
     // Delete a category by ID
-    async delete(data: DeleteCategoryInput): Promise<Category> {
+    async delete(id: number): Promise<Category> {
         const res = await api.delete<ApiResponse<{ category: Category }>>(
-            `/categories/${data.id}`
+            `/categories/${id}`
         );
         return res.data.category;
     },

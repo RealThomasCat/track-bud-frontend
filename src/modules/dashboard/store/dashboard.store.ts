@@ -18,7 +18,6 @@ type DashboardState = {
     hasLoaded: boolean;
     error: string | null;
     fetchAll: () => Promise<void>;
-    applyTransactionOptimistic: (txn: DashboardTransaction) => void;
 };
 
 export const useDashboardStore = create<DashboardState>((set) => ({
@@ -50,31 +49,5 @@ export const useDashboardStore = create<DashboardState>((set) => ({
         } finally {
             set({ loading: false });
         }
-    },
-
-    applyTransactionOptimistic: (txn: DashboardTransaction) => {
-        set((state) => {
-            const amount = Number(txn.amount);
-
-            const summary = state.summary
-                ? {
-                      ...state.summary,
-                      transactionCount: state.summary.transactionCount + 1,
-                      totalIncome:
-                          txn.kind === "income"
-                              ? state.summary.totalIncome + amount
-                              : state.summary.totalIncome,
-                      totalExpense:
-                          txn.kind === "expense"
-                              ? state.summary.totalExpense + amount
-                              : state.summary.totalExpense,
-                  }
-                : state.summary;
-
-            return {
-                summary,
-                recentActivity: [txn, ...state.recentActivity],
-            };
-        });
     },
 }));

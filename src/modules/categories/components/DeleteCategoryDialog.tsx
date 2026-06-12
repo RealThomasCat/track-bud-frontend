@@ -26,6 +26,8 @@ export function DeleteCategoryDialog({ categoryId, open, onClose }: Props) {
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleDelete = async () => {
+        if (isSubmitting) return;
+
         setApiError(null);
         setIsSubmitting(true);
 

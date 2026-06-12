@@ -38,6 +38,8 @@ export function Categories() {
                     onClick={() => fetchAllCategories()}
                     variant="secondary"
                     className="text-neutral-300 hover:bg-neutral-800"
+                    disabled={loading}
+                    loading={loading}
                 >
                     Retry
                 </Button>

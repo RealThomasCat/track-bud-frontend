@@ -1,11 +1,13 @@
 "use client";
 
 import { useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/modules/auth/store/auth.store";
 import { useDashboardStore } from "@/modules/dashboard/store/dashboard.store";
 
 import { Button } from "@/components/ui/Button";
+import { FormError } from "@/components/ui/FormError";
 import { SummaryCards } from "@/modules/dashboard/components/SummaryCards";
 import { RecentActivity } from "@/modules/dashboard/components/RecentActivity";
 import { ChartsSection } from "@/modules/dashboard/components/ChartsSection";
@@ -18,10 +20,13 @@ import { AiForecast } from "@/modules/ai/components/AiForcast";
 export function DashboardContent() {
     const router = useRouter();
     const { user, logout } = useAuthStore();
+    const [isLoggingOut, setIsLoggingOut] = useState(false);
     const {
         fetchAll,
         hasLoaded: dashboardHasLoaded,
         summary,
+        error,
+        loading,
     } = useDashboardStore();
 
     useEffect(() => {
@@ -29,7 +34,7 @@ export function DashboardContent() {
     }, [fetchAll]);
 
     const isReady = dashboardHasLoaded;
-    const transactionCount = isReady ? summary!.transactionCount : 0;
+    const transactionCount = isReady && summary ? summary.transactionCount : 0;
     const hasTransactions = isReady && transactionCount > 0;
     const canUseAi = isReady && transactionCount >= 5;
 
@@ -47,9 +52,18 @@ export function DashboardContent() {
                     <Button
                         className="max-w-40"
                         variant="secondary"
+                        disabled={isLoggingOut}
+                        loading={isLoggingOut}
                         onClick={async () => {
-                            await logout();
-                            router.push("/login");
+                            if (isLoggingOut) return;
+
+                            setIsLoggingOut(true);
+                            try {
+                                await logout();
+                                router.push("/login");
+                            } finally {
+                                setIsLoggingOut(false);
+                            }
                         }}
                     >
                         Logout
@@ -72,8 +86,25 @@ export function DashboardContent() {
                     {" "}
                     Loading dashboard...{" "}
                 </div>
+            ) : error && !summary ? (
+                <div className="bg-neutral-900 border border-neutral-800 rounded-xl p-5">
+                    <h2 className="text-lg font-semibold text-neutral-100 mb-3">
+                        Dashboard unavailable
+                    </h2>
+                    <FormError message={error} />
+                    <Button
+                        variant="secondary"
+                        className="mt-4 max-w-32"
+                        onClick={() => fetchAll()}
+                        disabled={loading}
+                        loading={loading}
+                    >
+                        Retry
+                    </Button>
+                </div>
             ) : (
                 <>
+                    <FormError message={error ?? undefined} className="mb-4" />
                     <SummaryCards />
                     <RecentActivity />
 

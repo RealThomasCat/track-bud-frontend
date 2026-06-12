@@ -46,7 +46,10 @@ export const useDashboardStore = create<DashboardState>((set) => ({
                 hasLoaded: true,
             });
         } catch (err: unknown) {
-            set({ error: extractErrorMessage(err) });
+            set({
+                error: extractErrorMessage(err),
+                hasLoaded: true,
+            });
         } finally {
             set({ loading: false });
         }

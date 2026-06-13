@@ -110,11 +110,11 @@ export function DashboardContent() {
 
                     {/* AI SECTION */}
                     {canUseAi ? (
-                        <>
+                        <div key={transactionCount}>
                             <AiSpendingSummary />
                             <AiSavingRecommendations />
                             <AiForecast />
-                        </>
+                        </div>
                     ) : (
                         <div className="bg-neutral-900 border border-neutral-800 rounded-xl p-6 mt-6">
                             <h2 className="text-lg font-semibold text-neutral-100">

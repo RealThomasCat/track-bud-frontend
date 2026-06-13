@@ -37,12 +37,9 @@ export const useCategoryStore = create<CategoryState>((set) => ({
     // Create category
     addCategory: async (input) => {
         try {
-            const newCategory = await CategoryService.create(input);
-
-            // prepend new category
-            set((state) => ({
-                categories: [...state.categories, newCategory],
-            }));
+            await CategoryService.create(input);
+            const categories = await CategoryService.getAll();
+            set({ categories });
         } catch (err: unknown) {
             throw err; // let UI handle errors
         }
@@ -52,11 +49,8 @@ export const useCategoryStore = create<CategoryState>((set) => ({
     removeCategory: async (id) => {
         try {
             await CategoryService.delete(id);
-
-            // remove locally
-            set((state) => ({
-                categories: state.categories.filter((c) => c.id !== id),
-            }));
+            const categories = await CategoryService.getAll();
+            set({ categories });
         } catch (err: unknown) {
             throw err;
         }

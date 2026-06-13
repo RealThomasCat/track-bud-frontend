@@ -30,6 +30,14 @@ export type TransactionListResponse = {
     pagination: TransactionPagination;
 };
 
+export type TransactionQueryParams = {
+    limit?: number;
+    cursor?: number;
+    kind?: "income" | "expense";
+    startDate?: string;
+    endDate?: string;
+};
+
 // Match backend response shape
 export type Transaction = {
     id: number;

@@ -4,16 +4,23 @@ import {
     CreateTransactionInput,
     Transaction,
     TransactionListResponse,
+    TransactionQueryParams,
 } from "../schemas/transaction.schemas";
 
 export const TransactionService = {
     // GET ALL TRANSACTIONS
-    async getAll(): Promise<Transaction[]> {
+    async getAll(
+        params?: TransactionQueryParams
+    ): Promise<TransactionListResponse> {
         const res =
             await api.get<ApiResponse<TransactionListResponse>>(
                 "/transactions",
+                { params }
             );
-        return res.data.transactions;
+        return {
+            transactions: res.data.transactions,
+            pagination: res.data.pagination,
+        };
     },
 
     // GET TRANSACTION BY ID

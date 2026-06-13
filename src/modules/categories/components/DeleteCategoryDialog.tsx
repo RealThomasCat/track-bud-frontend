@@ -46,14 +46,15 @@ export function DeleteCategoryDialog({ categoryId, open, onClose }: Props) {
             <DialogContent className="sm:max-w-md bg-neutral-900 border border-neutral-800 text-neutral-100">
                 <DialogHeader>
                     <DialogTitle className="text-lg font-semibold text-neutral-100">
-                        Delete Category
+                        Archive Category
                     </DialogTitle>
                 </DialogHeader>
 
                 <p className="text-sm text-neutral-400 leading-relaxed">
-                    Are you sure you want to delete this category?{" "}
+                    Are you sure you want to archive this category?{" "}
                     <span className="text-neutral-300">
-                        It will be archived but not permanently removed.
+                        It will be hidden from new transaction forms, but
+                        existing transactions will keep their history.
                     </span>
                 </p>
 
@@ -73,7 +74,7 @@ export function DeleteCategoryDialog({ categoryId, open, onClose }: Props) {
                         loading={isSubmitting}
                         onClick={handleDelete}
                     >
-                        Delete
+                        Archive
                     </Button>
                 </DialogFooter>
             </DialogContent>

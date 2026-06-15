@@ -9,6 +9,8 @@ type AiSectionCardProps = {
     description: string;
     loading: boolean;
     onGenerate: () => void;
+    actionLabel?: string;
+    showAction?: boolean;
     error?: string | null;
     children?: ReactNode;
 };
@@ -18,6 +20,8 @@ export function AiSectionCard({
     description,
     loading,
     onGenerate,
+    actionLabel = "Generate",
+    showAction = true,
     error,
     children,
 }: AiSectionCardProps) {
@@ -31,15 +35,17 @@ export function AiSectionCard({
                     <p className="text-sm text-neutral-400">{description}</p>
                 </div>
 
-                <Button
-                    variant="primary"
-                    className="md:max-w-40"
-                    disabled={loading}
-                    loading={loading}
-                    onClick={onGenerate}
-                >
-                    Generate
-                </Button>
+                {showAction && (
+                    <Button
+                        variant="primary"
+                        className="md:max-w-40"
+                        disabled={loading}
+                        loading={loading}
+                        onClick={onGenerate}
+                    >
+                        {actionLabel}
+                    </Button>
+                )}
             </div>
 
             <FormError message={error ?? undefined} className="mt-4" />

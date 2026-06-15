@@ -26,13 +26,15 @@ export function AiSectionCard({
     children,
 }: AiSectionCardProps) {
     return (
-        <div className="bg-neutral-900 border border-neutral-800 rounded-xl p-6 mt-6">
-            <div className="flex flex-col md:flex-row gap-4 md:gap-0 justify-between md:items-center">
+        <div className="bg-neutral-900 border border-neutral-800 rounded-xl p-5 md:p-6 mt-6">
+            <div className="flex flex-col md:flex-row gap-4 justify-between md:items-start">
                 <div>
-                    <h2 className="text-lg font-semibold text-neutral-100">
+                    <h2 className="text-lg font-semibold text-neutral-100 leading-7">
                         {title}
                     </h2>
-                    <p className="text-sm text-neutral-400">{description}</p>
+                    <p className="text-sm text-neutral-400 mt-1 leading-5">
+                        {description}
+                    </p>
                 </div>
 
                 {showAction && (
@@ -49,7 +51,7 @@ export function AiSectionCard({
             </div>
 
             <FormError message={error ?? undefined} className="mt-4" />
-            {children && <div className="mt-4">{children}</div>}
+            {children && <div className="mt-5">{children}</div>}
         </div>
     );
 }

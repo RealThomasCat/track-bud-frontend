@@ -15,11 +15,17 @@ export function SpendingSummaryRenderer({
             </p>
 
             <h3 className="text-neutral-100 font-semibold text-sm">Insights</h3>
-            <ul className="list-disc pl-5 space-y-1 text-neutral-300 text-sm">
-                {data.insights.map((item, i) => (
-                    <li key={i}>{item}</li>
-                ))}
-            </ul>
+            {data.insights.length ? (
+                <ul className="list-disc pl-5 space-y-1 text-neutral-300 text-sm">
+                    {data.insights.map((item, i) => (
+                        <li key={i}>{item}</li>
+                    ))}
+                </ul>
+            ) : (
+                <p className="text-neutral-400 text-sm">
+                    No spending insights are available for this period.
+                </p>
+            )}
         </div>
     );
 }

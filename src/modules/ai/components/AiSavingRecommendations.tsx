@@ -6,6 +6,7 @@ import { AiResponse, SavingRecommendationsData } from "../schemas/ai.schemas";
 import { AiService } from "../services/ai.service";
 import { SavingRecommendationsRenderer } from "./SavingRecommendationsRenderer";
 import { extractErrorMessage } from "@/lib/utils";
+import { AiRawTextFallback } from "./AiRawTextFallback";
 
 export function AiSavingRecommendations() {
     const [loading, setLoading] = useState(false);
@@ -28,16 +29,43 @@ export function AiSavingRecommendations() {
         }
     };
 
+    const hasResult = Boolean(result);
+    const actionLabel = error ? "Retry" : "Generate";
+
     return (
         <AiSectionCard
             title="Saving Recommendations"
             description="Get personalized suggestions to maximize your savings."
             loading={loading}
             onGenerate={generate}
+            actionLabel={actionLabel}
+            showAction={!hasResult || Boolean(error)}
             error={error}
         >
-            {Boolean(result?.data) && (
+            {loading && (
+                <p className="text-neutral-400 text-sm">
+                    Generating saving recommendations...
+                </p>
+            )}
+
+            {!loading && !result && (
+                <p className="text-neutral-400 text-sm">
+                    No saving recommendations generated yet.
+                </p>
+            )}
+
+            {!loading && Boolean(result?.data) && (
                 <SavingRecommendationsRenderer data={result!.data!} />
+            )}
+
+            {!loading && !result?.data && result?.rawText && (
+                <AiRawTextFallback text={result.rawText} />
+            )}
+
+            {!loading && result && !result.data && !result.rawText && (
+                <p className="text-neutral-400 text-sm">
+                    No saving recommendations were returned for this period.
+                </p>
             )}
         </AiSectionCard>
     );

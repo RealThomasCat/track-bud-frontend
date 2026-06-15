@@ -16,7 +16,7 @@ export function Button({
     ...props
 }: ButtonProps) {
     const baseStyles =
-        "w-full py-2 rounded-md font-medium transition-colors disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer text-sm";
+        "w-full py-2 rounded-md font-medium transition-colors disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950";
 
     const variants = {
         primary:

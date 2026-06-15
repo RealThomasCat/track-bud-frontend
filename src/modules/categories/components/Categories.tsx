@@ -79,7 +79,8 @@ export function Categories() {
                             {!c.isDefault && (
                                 <button
                                     onClick={() => setDeleteId(c.id)}
-                                    className="text-neutral-500 hover:text-rose-500 transition"
+                                    className="rounded-md p-1 text-neutral-500 transition hover:text-rose-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-900"
+                                    aria-label={`Archive category ${c.name}`}
                                 >
                                     <Trash2 className="w-4 h-4" />
                                 </button>

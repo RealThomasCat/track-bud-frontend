@@ -51,16 +51,18 @@ export function RecentActivity() {
                     {recentActivity.map((txn) => (
                         <li
                             key={txn.id}
-                            className="flex justify-between py-3 text-sm text-neutral-300"
+                            className="flex justify-between gap-4 py-3 text-sm text-neutral-300"
                         >
-                            <div>
-                                <p className="font-medium">{txn.category}</p>
-                                <p className="text-neutral-500 text-xs mt-0.5">
-                                    {txn.note || "—"}
+                            <div className="min-w-0">
+                                <p className="truncate font-medium">
+                                    {txn.category}
+                                </p>
+                                <p className="mt-0.5 truncate text-xs text-neutral-500">
+                                    {txn.note || ""}
                                 </p>
                             </div>
 
-                            <div className="text-right">
+                            <div className="shrink-0 text-right">
                                 <p
                                     className={
                                         txn.kind === "income"

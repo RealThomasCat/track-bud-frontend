@@ -16,6 +16,7 @@ import { Categories } from "@/modules/categories/components/Categories";
 import { AiSpendingSummary } from "@/modules/ai/components/AiSpendingSummary";
 import { AiSavingRecommendations } from "@/modules/ai/components/AiSavingRecommendations";
 import { AiForecast } from "@/modules/ai/components/AiForcast";
+import { AiMonthlyReview } from "@/modules/ai/components/monthly-review/AiMonthlyReview";
 
 export function DashboardContent() {
     const router = useRouter();
@@ -114,6 +115,7 @@ export function DashboardContent() {
                             <AiSpendingSummary />
                             <AiSavingRecommendations />
                             <AiForecast />
+                            <AiMonthlyReview />
                         </div>
                     ) : (
                         <div className="bg-neutral-900 border border-neutral-800 rounded-xl p-6 mt-6">

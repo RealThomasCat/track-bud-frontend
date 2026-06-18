@@ -85,14 +85,18 @@ export type MonthlyReviewResult =
 export type MonthlyReview = {
     id: number;
     userId: number;
+    status: MonthlyReviewStatus;
     periodStart: string;
     periodEnd: string;
-    comparisonStart: string;
-    comparisonEnd: string;
-    status: MonthlyReviewStatus;
+    comparisonStart: string | null;
+    comparisonEnd: string | null;
+    title: string | null;
+    dataQualityLevel: DataQualityLevel | null;
+    transactionCount: number;
     result: MonthlyReviewResult;
-    dataQuality: DataQualityLevel | null;
+    dataQuality?: DataQualityLevel | null;
     errorMessage: string | null;
+    jobId: string | null;
     createdAt: string;
     updatedAt: string;
     completedAt: string | null;

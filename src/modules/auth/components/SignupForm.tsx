@@ -11,9 +11,11 @@ import { useState } from "react";
 import { FormError } from "@/components/ui/FormError";
 import Link from "next/link";
 import { AuthService } from "../services/auth.service";
+import { useAuthStore } from "../store/auth.store";
 
 export function SignupForm() {
     const router = useRouter();
+    const { fetchUser } = useAuthStore();
     const [apiError, setApiError] = useState<string | null>(null);
 
     const {
@@ -29,7 +31,8 @@ export function SignupForm() {
         setApiError(null);
         try {
             await AuthService.signup(data);
-            router.push("/login");
+            await fetchUser();
+            router.replace("/dashboard");
         } catch (err) {
             setApiError(extractErrorMessage(err));
         }

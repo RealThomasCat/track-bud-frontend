@@ -3,12 +3,23 @@ import { z } from "zod";
 export const createTransactionSchema = z.object({
     amount: z
         .number()
-        .positive({ message: "Amount must be a positive number" }),
-    categoryId: z.number({ message: "Category is required" }),
+        .finite({ message: "Amount must be a valid number" })
+        .positive({ message: "Amount must be a positive number" })
+        .refine((value) => Number.isInteger(value * 100), {
+            message: "Amount can have at most 2 decimal places",
+        }),
+    categoryId: z
+        .number({ message: "Category is required" })
+        .int({ message: "Category is required" })
+        .positive({ message: "Category is required" }),
     kind: z.enum(["income", "expense"], {
         message: "Invalid transaction type",
     }),
-    note: z.string().optional(),
+    note: z
+        .string()
+        .trim()
+        .max(200, { message: "Note must be less than 200 characters" })
+        .optional(),
     occurredAt: z
         .string()
         .min(1, { message: "Date is required" })
